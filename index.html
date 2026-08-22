@@ -1,0 +1,7008 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GoldForge — Upgrade</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+:root{
+    --bg:#08090d;
+    --panel:#11141b;
+    --panel2:#171a22;
+    --border:#292e3a;
+    --border2:#3b4251;
+    --text:#f4f5f8;
+    --muted:#777f90;
+    --purple:#8064ff;
+    --purple2:#a996ff;
+    --green:#45df8b;
+    --red:#ff5575;
+}
+
+html{
+    background:var(--bg);
+}
+
+body{
+    min-height:100vh;
+    color:var(--text);
+    background:
+        radial-gradient(
+            circle at 50% -20%,
+            #2b224c 0,
+            transparent 40%
+        ),
+        var(--bg);
+
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+}
+
+button,
+input,
+select{
+    font:inherit;
+}
+
+button{
+    -webkit-tap-highlight-color:transparent;
+}
+
+
+/* ================= HEADER ================= */
+
+header{
+    height:72px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 30px;
+
+    position:sticky;
+    top:0;
+    z-index:100;
+
+    border-bottom:1px solid var(--border);
+
+    background:rgba(8,9,13,.88);
+    backdrop-filter:blur(18px);
+}
+
+.logo{
+    font-size:22px;
+    font-weight:950;
+    letter-spacing:-1px;
+}
+
+.logo span{
+    color:var(--purple2);
+}
+
+.admin-badge{
+    display:inline-block;
+
+    margin-left:8px;
+    padding:4px 7px;
+
+    border-radius:5px;
+
+    color:#b9aaff;
+    background:rgba(128,100,255,.12);
+    border:1px solid rgba(128,100,255,.2);
+
+    font-size:8px;
+    font-weight:950;
+    letter-spacing:.6px;
+}
+
+.balance{
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    padding:8px 14px;
+
+    border:1px solid var(--border);
+    border-radius:12px;
+
+    background:#12151c;
+}
+
+.coin{
+    width:29px;
+    height:29px;
+
+    display:grid;
+    place-items:center;
+
+    border-radius:50%;
+
+    color:white;
+    background:linear-gradient(
+        135deg,
+        #b09aff,
+        #6040ed
+    );
+
+    font-size:12px;
+    font-weight:950;
+}
+
+.balance-number{
+    font-size:16px;
+    font-weight:950;
+}
+
+.balance-label{
+    color:var(--muted);
+    font-size:8px;
+    font-weight:850;
+    letter-spacing:.8px;
+}
+
+
+/* ================= NAV ================= */
+
+nav{
+    width:min(1180px,calc(100% - 24px));
+
+    margin:16px auto 0;
+
+    display:flex;
+    gap:7px;
+}
+
+.nav-button{
+    height:40px;
+
+    padding:0 17px;
+
+    border:1px solid var(--border);
+    border-radius:10px;
+
+    color:#858c9c;
+    background:#11141b;
+
+    cursor:pointer;
+
+    font-size:11px;
+    font-weight:900;
+}
+
+.nav-button:hover{
+    color:white;
+    border-color:#474e5e;
+}
+
+.nav-button.active{
+    color:#b9adff;
+
+    background:rgba(128,100,255,.11);
+    border-color:#594ca0;
+}
+
+
+/* ================= PAGE ================= */
+
+.page{
+    width:min(1180px,calc(100% - 24px));
+
+    margin:20px auto 80px;
+}
+
+.section{
+    display:none;
+}
+
+.section.active{
+    display:block;
+}
+
+.panel{
+    overflow:hidden;
+
+    border:1px solid var(--border);
+    border-radius:18px;
+
+    background:rgba(15,17,23,.92);
+}
+
+.panel-header{
+    padding:22px 23px;
+
+    border-bottom:1px solid var(--border);
+}
+
+.title{
+    font-size:15px;
+    font-weight:950;
+}
+
+.subtitle{
+    margin-top:5px;
+
+    color:var(--muted);
+
+    font-size:10px;
+}
+
+
+/* ================= BUTTONS ================= */
+
+.control{
+    min-width:58px;
+    height:38px;
+
+    padding:0 13px;
+
+    border:1px solid var(--border);
+    border-radius:9px;
+
+    color:#dfe2e9;
+    background:#151821;
+
+    cursor:pointer;
+
+    font-size:10px;
+    font-weight:950;
+}
+
+.control:hover{
+    background:#222631;
+    border-color:#464d5e;
+}
+
+.control.selected{
+    color:#b8aaff;
+
+    border-color:#725de0;
+    background:rgba(128,100,255,.14);
+}
+
+.control:disabled{
+    opacity:.45;
+    cursor:not-allowed;
+}
+
+
+/* ================= UPGRADE ARENA ================= */
+
+.arena{
+    display:grid;
+    grid-template-columns:1fr 280px 1fr;
+    gap:20px;
+
+    align-items:center;
+
+    min-height:390px;
+
+    padding:30px;
+}
+
+.slot{
+    min-height:235px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    padding:20px;
+
+    border:1px dashed #343a49;
+    border-radius:17px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(32,36,48,.9),
+            transparent 67%
+        );
+
+    cursor:pointer;
+
+    transition:
+        border-color .2s,
+        transform .2s;
+}
+
+.slot:hover{
+    transform:translateY(-2px);
+    border-color:#51596c;
+}
+
+.slot-art{
+    width:150px;
+    height:105px;
+
+    display:grid;
+    place-items:center;
+
+    border:1px solid #363c4b;
+    border-radius:14px;
+
+    background:
+        radial-gradient(
+            circle at 50% 30%,
+            rgba(128,100,255,.13),
+            transparent 55%
+        ),
+        linear-gradient(
+            135deg,
+            #272d3b,
+            #11141a
+        );
+
+    font-size:47px;
+
+    transition:transform .25s;
+}
+
+.slot:hover .slot-art{
+    transform:scale(1.03);
+}
+
+.slot-name{
+    max-width:90%;
+
+    margin-top:15px;
+
+    overflow:hidden;
+
+    color:white;
+
+    text-align:center;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+
+    font-size:12px;
+    font-weight:950;
+}
+
+.slot-price{
+    margin-top:5px;
+
+    color:#9c88ff;
+
+    font-size:11px;
+    font-weight:950;
+}
+
+
+/* ================= WHEEL ================= */
+
+.center{
+    text-align:center;
+}
+
+.wheel-container{
+    width:250px;
+    height:250px;
+
+    position:relative;
+
+    margin:auto;
+
+    filter:
+        drop-shadow(
+            0 16px 35px rgba(0,0,0,.5)
+        );
+}
+
+#wheel{
+    width:250px;
+    height:250px;
+
+    display:block;
+
+    /*
+        Очень важно:
+        вращаем только canvas.
+    */
+    transform-origin:center center;
+
+    will-change:transform;
+}
+
+.pointer{
+    position:absolute;
+
+    top:-8px;
+    left:50%;
+
+    z-index:10;
+
+    width:0;
+    height:0;
+
+    transform:translateX(-50%);
+
+    /*
+        Треугольник направлен вниз.
+        Его кончик смотрит точно
+        на верхнюю точку колеса.
+    */
+
+    border-left:12px solid transparent;
+    border-right:12px solid transparent;
+    border-top:28px solid #fff;
+
+    filter:
+        drop-shadow(
+            0 3px 5px rgba(0,0,0,.75)
+        );
+}
+
+.wheel-center{
+    position:absolute;
+
+    top:50%;
+    left:50%;
+
+    width:53px;
+    height:53px;
+
+    transform:translate(-50%,-50%);
+
+    display:grid;
+    place-items:center;
+
+    border:2px solid #3b4050;
+    border-radius:50%;
+
+    color:#a995ff;
+    background:#11141b;
+
+    font-size:17px;
+    font-weight:950;
+
+    box-shadow:
+        0 0 25px rgba(128,100,255,.25);
+}
+
+.wheel-container.spinning{
+    filter:
+        drop-shadow(
+            0 0 30px rgba(128,100,255,.55)
+        );
+}
+
+.chance-number{
+    margin-top:12px;
+
+    font-size:30px;
+    font-weight:950;
+}
+
+.chance-label{
+    margin-top:2px;
+
+    color:var(--muted);
+
+    font-size:8px;
+    font-weight:900;
+    letter-spacing:1px;
+}
+
+
+/* ================= CONTROLS ================= */
+
+.controls{
+    padding:21px 24px 25px;
+
+    border-top:1px solid var(--border);
+}
+
+.label{
+    margin-bottom:8px;
+
+    color:#7d8493;
+
+    font-size:9px;
+    font-weight:950;
+
+    letter-spacing:1px;
+    text-transform:uppercase;
+}
+
+.row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+
+    margin-bottom:18px;
+}
+
+.input{
+    height:40px;
+
+    padding:0 12px;
+
+    outline:none;
+
+    border:1px solid var(--border);
+    border-radius:9px;
+
+    color:white;
+    background:#0a0c11;
+
+    font-size:11px;
+}
+
+.input:focus{
+    border-color:var(--purple);
+}
+
+.amount-input{
+    width:125px;
+}
+
+.main-button{
+    width:100%;
+    height:52px;
+
+    border:0;
+    border-radius:11px;
+
+    color:white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8467ff,
+            #6041e9
+        );
+
+    cursor:pointer;
+
+    font-size:12px;
+    font-weight:950;
+}
+
+.main-button:hover{
+    filter:brightness(1.08);
+}
+
+.main-button:disabled{
+    opacity:.55;
+    cursor:not-allowed;
+}
+
+
+/* ================= TOOLBAR ================= */
+
+.toolbar{
+    padding:17px;
+    margin-bottom:15px;
+
+    border:1px solid var(--border);
+    border-radius:17px;
+
+    background:rgba(15,17,23,.9);
+}
+
+.toolbar-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:14px;
+}
+
+.count{
+    margin-top:4px;
+
+    color:var(--muted);
+
+    font-size:10px;
+}
+
+.filters{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.search{
+    flex:1;
+    min-width:180px;
+}
+
+.price-group{
+    display:flex;
+    align-items:center;
+    gap:6px;
+
+    color:#626978;
+
+    font-size:10px;
+}
+
+.price-input{
+    width:125px;
+}
+
+.select{
+    min-width:170px;
+}
+
+
+/* ================= SKIN GRID ================= */
+
+.grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0,1fr)
+        );
+
+    gap:11px;
+}
+
+.skin-card{
+    min-width:0;
+
+    padding:11px;
+
+    border:1px solid var(--border);
+    border-radius:14px;
+
+    background:#11141b;
+
+    cursor:pointer;
+
+    transition:
+        transform .18s,
+        border-color .18s;
+}
+
+.skin-card:hover{
+    transform:translateY(-3px);
+    border-color:#454c5e;
+}
+
+.skin-image{
+    height:125px;
+
+    position:relative;
+
+    overflow:hidden;
+
+    display:grid;
+    place-items:center;
+
+    border:1px solid #303644;
+    border-radius:10px;
+
+    background:
+        radial-gradient(
+            circle at 50% 30%,
+            rgba(128,100,255,.17),
+            transparent 53%
+        ),
+        linear-gradient(
+            135deg,
+            #242a38,
+            #12151c
+        );
+
+    font-size:48px;
+}
+
+.rarity{
+    position:absolute;
+
+    top:7px;
+    left:7px;
+
+    padding:4px 6px;
+
+    border-radius:5px;
+
+    color:#aab1c0;
+    background:rgba(5,7,10,.75);
+
+    font-size:7px;
+    font-weight:950;
+}
+
+.skin-name{
+    margin-top:10px;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+    white-space:nowrap;
+
+    font-size:11px;
+    font-weight:950;
+}
+
+.skin-price{
+    margin-top:5px;
+
+    color:#9b87ff;
+
+    font-size:11px;
+    font-weight:950;
+}
+
+.card-actions{
+    display:flex;
+    gap:6px;
+
+    margin-top:9px;
+}
+
+.small-button{
+    flex:1;
+
+    height:32px;
+
+    border:1px solid var(--border);
+    border-radius:8px;
+
+    color:#dfe2e8;
+    background:#171a22;
+
+    cursor:pointer;
+
+    font-size:9px;
+    font-weight:950;
+}
+
+.small-button:hover{
+    background:#252a35;
+}
+
+.small-button.sell{
+    color:#ff8299;
+}
+
+
+/* ================= ADMIN ================= */
+
+.admin-content{
+    padding:22px;
+}
+
+.command-row{
+    display:flex;
+    gap:8px;
+
+    margin-top:18px;
+}
+
+.command-input{
+    flex:1;
+    min-width:0;
+
+    font-family:monospace;
+}
+
+.execute{
+    padding:0 20px;
+
+    color:white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8064ff,
+            #6041e9
+        );
+}
+
+.admin-log{
+    min-height:100px;
+
+    margin-top:15px;
+    padding:14px;
+
+    overflow:auto;
+
+    border:1px solid var(--border);
+    border-radius:10px;
+
+    color:#929aaa;
+    background:#090b10;
+
+    font-family:monospace;
+    font-size:10px;
+    line-height:1.8;
+}
+
+.admin-stats{
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            5,
+            minmax(0,1fr)
+        );
+
+    gap:10px;
+
+    margin-top:18px;
+}
+
+.stat{
+    padding:15px;
+
+    border:1px solid var(--border);
+    border-radius:11px;
+
+    background:#12151c;
+}
+
+.stat-value{
+    font-size:18px;
+    font-weight:950;
+}
+
+.stat-label{
+    margin-top:4px;
+
+    color:var(--muted);
+
+    font-size:8px;
+    text-transform:uppercase;
+}
+
+
+/* ================= MODAL ================= */
+
+.modal{
+    position:fixed;
+    inset:0;
+
+    z-index:200;
+
+    display:none;
+    align-items:center;
+    justify-content:center;
+
+    padding:20px;
+
+    background:rgba(0,0,0,.68);
+
+    backdrop-filter:blur(7px);
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-box{
+    width:min(620px,100%);
+    max-height:82vh;
+
+    overflow:auto;
+
+    padding:20px;
+
+    border:1px solid var(--border2);
+    border-radius:17px;
+
+    background:#101319;
+}
+
+.modal-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:15px;
+}
+
+.close-button{
+    width:32px;
+    height:32px;
+
+    border:1px solid var(--border);
+    border-radius:8px;
+
+    color:#aab1bf;
+    background:#171a22;
+
+    cursor:pointer;
+}
+
+
+/* ================= CASES ================= */
+
+.cases-content{
+    padding:22px;
+}
+
+.cases-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(230px,1fr)
+        );
+
+    gap:16px;
+}
+
+.case-card{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+
+    position:relative;
+
+    padding:22px 16px;
+
+    border:1px solid var(--border);
+    border-radius:16px;
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(128,100,255,.14),
+            transparent 60%
+        ),
+        #12151c;
+
+    text-align:center;
+}
+
+.case-card.free-case{
+    border-color:#7CFC9A;
+    box-shadow:0 0 16px rgba(124,252,154,.15);
+}
+
+.free-badge{
+    position:absolute;
+    top:10px;
+    right:10px;
+
+    padding:4px 9px;
+
+    border-radius:20px;
+
+    background:#7CFC9A;
+
+    color:#0a1c10;
+
+    font-size:9px;
+    font-weight:950;
+    letter-spacing:.3px;
+}
+
+.case-icon{
+    width:88px;
+    height:88px;
+
+    display:grid;
+    place-items:center;
+
+    margin-bottom:12px;
+
+    border:1px solid #303644;
+    border-radius:14px;
+
+    background:
+        radial-gradient(
+            circle at 50% 30%,
+            rgba(128,100,255,.17),
+            transparent 53%
+        ),
+        linear-gradient(
+            135deg,
+            #242a38,
+            #12151c
+        );
+
+    font-size:42px;
+}
+
+.case-name{
+    font-size:14px;
+    font-weight:950;
+}
+
+.case-odds{
+    width:100%;
+    margin-top:10px;
+
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
+
+.odd-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:6px;
+
+    padding:5px 8px;
+
+    border:1px solid var(--border2);
+    border-radius:7px;
+
+    background:#0c0e13;
+
+    font-size:9px;
+    color:var(--muted);
+}
+
+.odd-row b{
+    color:#b8aaff;
+    font-size:9.5px;
+}
+
+.odd-row.jackpot{
+    border-color:#e0c25a;
+}
+
+.odd-row.jackpot b{
+    color:#ffe27a;
+}
+
+.case-range{
+    margin-top:5px;
+
+    color:var(--muted);
+
+    font-size:10.5px;
+}
+
+.case-price{
+    margin:12px 0;
+
+    color:#b8aaff;
+
+    font-size:16px;
+    font-weight:950;
+}
+
+.case-open-button{
+    width:100%;
+
+    padding:11px;
+
+    border:none;
+    border-radius:10px;
+
+    color:white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8064ff,
+            #6041e9
+        );
+
+    font-size:11px;
+    font-weight:950;
+    letter-spacing:.4px;
+
+    cursor:pointer;
+}
+
+.case-open-button:disabled{
+    opacity:.4;
+    cursor:not-allowed;
+}
+
+.case-reel-wrap{
+    position:relative;
+    overflow:hidden;
+
+    height:130px;
+    margin:6px 0 4px;
+
+    border:1px solid var(--border2);
+    border-radius:12px;
+
+    background:#0a0c11;
+}
+
+.case-reel-wrap::before,
+.case-reel-wrap::after{
+    content:"";
+
+    position:absolute;
+    top:0;
+    bottom:0;
+
+    width:60px;
+
+    z-index:4;
+
+    pointer-events:none;
+}
+
+.case-reel-wrap::before{
+    left:0;
+    background:
+        linear-gradient(
+            90deg,
+            #0a0c11,
+            transparent
+        );
+}
+
+.case-reel-wrap::after{
+    right:0;
+    background:
+        linear-gradient(
+            270deg,
+            #0a0c11,
+            transparent
+        );
+}
+
+.case-reel-pointer{
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:50%;
+
+    width:2px;
+
+    z-index:5;
+
+    background:#a996ff;
+    box-shadow:0 0 10px rgba(169,150,255,.8);
+
+    transform:translateX(-50%);
+}
+
+.case-reel{
+    position:absolute;
+    top:0;
+    left:0;
+    height:100%;
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    padding:0 10px;
+
+    transition:
+        transform 4.4s
+        cubic-bezier(.11,.7,.08,1);
+
+    will-change:transform;
+}
+
+.case-reel-item{
+    flex:0 0 96px;
+    width:96px;
+    height:104px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+
+    padding:6px;
+
+    border:1px solid var(--border2);
+    border-radius:10px;
+
+    background:
+        radial-gradient(
+            circle at 50% 25%,
+            rgba(128,100,255,.15),
+            transparent 55%
+        ),
+        linear-gradient(
+            135deg,
+            #242a38,
+            #12151c
+        );
+
+    text-align:center;
+}
+
+.case-reel-item.win-item{
+    border-color:#a996ff;
+    box-shadow:0 0 16px rgba(169,150,255,.55);
+}
+
+.case-reel-item .r-emoji{
+    font-size:26px;
+}
+
+.case-reel-item .r-name{
+    overflow:hidden;
+
+    max-width:88px;
+
+    text-overflow:ellipsis;
+    white-space:nowrap;
+
+    font-size:8.5px;
+    font-weight:800;
+}
+
+.case-reel-item .r-price{
+    color:#b8aaff;
+
+    font-size:9px;
+    font-weight:950;
+}
+
+.case-result{
+    display:none;
+
+    align-items:center;
+    gap:14px;
+
+    margin-top:14px;
+    padding:14px;
+
+    border:1px solid var(--border2);
+    border-radius:12px;
+
+    background:#12151c;
+}
+
+.case-result.show{
+    display:flex;
+}
+
+.case-result .r-icon{
+    width:56px;
+    height:56px;
+
+    display:grid;
+    place-items:center;
+
+    flex-shrink:0;
+
+    border:1px solid #303644;
+    border-radius:10px;
+
+    background:#1a1e28;
+
+    font-size:28px;
+}
+
+.case-result .r-info .r-title{
+    color:var(--muted);
+
+    font-size:9px;
+    text-transform:uppercase;
+}
+
+.case-result .r-info .r-name{
+    margin-top:3px;
+
+    font-size:13px;
+    font-weight:950;
+}
+
+.case-result .r-info .r-price{
+    margin-top:3px;
+
+    color:#b8aaff;
+
+    font-size:12px;
+    font-weight:950;
+}
+
+
+/* ================= CASE ICON IMAGE ================= */
+
+.case-icon-img{
+    width:64px;
+    height:64px;
+
+    display:block;
+    margin:0 auto 10px;
+
+    filter:
+        drop-shadow(
+            0 6px 10px rgba(0,0,0,.45)
+        );
+}
+
+
+/* ================= PROMO CODES ================= */
+
+.promo-content{
+    padding:22px;
+}
+
+.promo-row{
+    display:flex;
+    gap:10px;
+}
+
+.promo-row .input{
+    flex:1;
+}
+
+.promo-message{
+    min-height:20px;
+    margin-top:10px;
+
+    font-size:12.5px;
+    font-weight:800;
+}
+
+.promo-message.good{
+    color:#7CFC9A;
+}
+
+.promo-message.bad{
+    color:#ff6b6b;
+}
+
+.promo-used-title{
+    margin-top:22px;
+
+    color:var(--muted);
+
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:.4px;
+}
+
+.promo-used-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+
+    margin-top:10px;
+
+    color:var(--muted);
+    font-size:12px;
+}
+
+.promo-used-chip{
+    padding:6px 12px;
+
+    border:1px solid var(--border2);
+    border-radius:20px;
+
+    background:#12151c;
+
+    color:#b8aaff;
+    font-weight:800;
+    font-size:11.5px;
+}
+
+
+/* ================= DAILY BONUS ================= */
+
+.daily-content{
+    padding:22px;
+}
+
+.daily-wheel-outcomes{
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0,1fr)
+        );
+
+    gap:10px;
+
+    margin-bottom:16px;
+}
+
+.daily-outcome{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:4px;
+
+    padding:14px 6px;
+
+    border:1px solid var(--border2);
+    border-radius:12px;
+
+    background:#12151c;
+
+    text-align:center;
+}
+
+.daily-outcome .do-emoji{
+    font-size:26px;
+}
+
+.daily-outcome .do-label{
+    font-size:11px;
+    font-weight:950;
+}
+
+.daily-outcome .do-chance{
+    color:var(--muted);
+    font-size:10px;
+}
+
+.daily-outcome.gold{
+    border-color:#e0c25a;
+    box-shadow:0 0 14px rgba(224,194,90,.25);
+}
+
+.daily-outcome.silver{
+    border-color:#b9c2d0;
+}
+
+.daily-outcome.bronze{
+    border-color:#c98a56;
+}
+
+.daily-claim-button:disabled{
+    opacity:.4;
+    cursor:not-allowed;
+}
+
+.daily-timer{
+    margin-top:12px;
+
+    text-align:center;
+
+    color:var(--muted);
+
+    font-size:12px;
+    font-weight:700;
+}
+
+.daily-timer.ready{
+    color:#7CFC9A;
+}
+
+
+.target-list{
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0,1fr)
+        );
+
+    gap:8px;
+}
+
+.target{
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    padding:11px;
+
+    border:1px solid var(--border);
+    border-radius:10px;
+
+    background:#14171f;
+
+    cursor:pointer;
+}
+
+.target:hover{
+    border-color:#6354a7;
+}
+
+.target-icon{
+    width:45px;
+    height:40px;
+
+    display:grid;
+    place-items:center;
+
+    border-radius:8px;
+
+    background:#202532;
+
+    font-size:21px;
+}
+
+.target-name{
+    font-size:10px;
+    font-weight:900;
+}
+
+.target-price{
+    margin-top:3px;
+
+    color:#9985ff;
+
+    font-size:9px;
+    font-weight:900;
+}
+
+
+/* ================= EMPTY ================= */
+
+.empty{
+    grid-column:1/-1;
+
+    padding:50px;
+
+    color:var(--muted);
+
+    text-align:center;
+
+    font-size:11px;
+    line-height:2;
+}
+
+
+/* ================= TOAST ================= */
+
+#toast-container{
+    position:fixed;
+
+    right:20px;
+    bottom:20px;
+
+    z-index:300;
+
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.toast{
+    max-width:330px;
+
+    padding:12px 15px;
+
+    border:1px solid #353b49;
+    border-radius:10px;
+
+    color:#e8eaf0;
+    background:#151921;
+
+    box-shadow:
+        0 15px 45px rgba(0,0,0,.5);
+
+    font-size:10px;
+    font-weight:900;
+
+    animation:
+        toastIn .2s ease;
+}
+
+.toast.good{
+    color:#7cecab;
+    border-color:#286f4d;
+}
+
+.toast.bad{
+    color:#ff8298;
+    border-color:#733045;
+}
+
+@keyframes toastIn{
+
+    from{
+        opacity:0;
+        transform:translateY(8px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+
+/* ================= MOBILE ================= */
+
+@media(max-width:950px){
+
+    .arena{
+        grid-template-columns:1fr;
+    }
+
+    .grid{
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(0,1fr)
+            );
+    }
+
+}
+
+@media(max-width:600px){
+
+    header{
+        padding:0 12px;
+    }
+
+    .logo{
+        font-size:17px;
+    }
+
+    .admin-badge{
+        display:none;
+    }
+
+    nav{
+        overflow-x:auto;
+        scrollbar-width:none;
+    }
+
+    nav::-webkit-scrollbar{
+        display:none;
+    }
+
+    .page{
+        width:calc(100% - 14px);
+    }
+
+    .grid{
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0,1fr)
+            );
+    }
+
+    .command-row{
+        flex-direction:column;
+    }
+
+    .execute{
+        height:40px;
+    }
+
+    .target-list{
+        grid-template-columns:1fr;
+    }
+
+    .filters{
+        flex-direction:column;
+    }
+
+    .search,
+    .price-input,
+    .select{
+        width:100%;
+    }
+
+    .admin-stats{
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+        Gold<span>Forge</span>
+        <span class="admin-badge">ADMIN</span>
+    </div>
+
+    <div class="balance">
+
+        <div class="coin">
+            G
+        </div>
+
+        <div>
+
+            <div
+                class="balance-number"
+                id="balance"
+            >
+                500
+            </div>
+
+            <div class="balance-label">
+                GOLD
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<nav>
+
+    <button
+        class="nav-button active"
+        data-page="upgrade"
+    >
+        ⚡ Апгрейд
+    </button>
+
+    <button
+        class="nav-button"
+        data-page="shop"
+    >
+        🛒 Магазин
+    </button>
+
+    <button
+        class="nav-button"
+        data-page="inventory"
+    >
+        🎒 Инвентарь
+    </button>
+
+    <button
+        class="nav-button"
+        data-page="cases"
+    >
+        📦 Кейсы
+    </button>
+
+    <button
+        class="nav-button"
+        data-page="promo"
+    >
+        🎟️ Промокоды
+    </button>
+
+    <button
+        class="nav-button"
+        data-page="daily"
+    >
+        🎡 Бонус
+    </button>
+
+    <button
+        class="nav-button"
+        data-page="admin"
+    >
+        ⚙️ Админ
+    </button>
+
+</nav>
+
+
+<main class="page">
+
+
+<!-- ==================================================
+     UPGRADE
+=================================================== -->
+
+<section
+    class="section active"
+    id="upgrade"
+>
+
+    <div class="panel">
+
+        <div class="panel-header">
+
+            <div class="title">
+                АПГРЕЙДЕР
+            </div>
+
+            <div class="subtitle">
+                Выбери предмет и цель
+            </div>
+
+        </div>
+
+
+        <div class="arena">
+
+
+            <!-- SOURCE -->
+
+            <div
+                class="slot"
+                id="sourceSlot"
+            >
+
+                <div
+                    class="slot-art"
+                    id="sourceArt"
+                >
+                    🎁
+                </div>
+
+                <div
+                    class="slot-name"
+                    id="sourceName"
+                >
+                    Выбери скин
+                </div>
+
+                <div
+                    class="slot-price"
+                    id="sourcePrice"
+                >
+                    Из инвентаря
+                </div>
+
+            </div>
+
+
+            <!-- WHEEL -->
+
+            <div class="center">
+
+                <div
+                    class="wheel-container"
+                    id="wheelContainer"
+                >
+
+                    <canvas
+                        id="wheel"
+                        width="250"
+                        height="250"
+                    ></canvas>
+
+                    <div class="pointer">
+                    </div>
+
+                    <div class="wheel-center">
+                        G
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="chance-number"
+                    id="chanceNumber"
+                >
+                    55%
+                </div>
+
+                <div class="chance-label">
+                    ШАНС ПОБЕДЫ
+                </div>
+
+            </div>
+
+
+            <!-- TARGET -->
+
+            <div
+                class="slot"
+                id="targetSlot"
+            >
+
+                <div
+                    class="slot-art"
+                    id="targetArt"
+                >
+                    ?
+                </div>
+
+                <div
+                    class="slot-name"
+                    id="targetName"
+                >
+                    Цель (авторасчёт)
+                </div>
+
+                <div
+                    class="slot-price"
+                    id="targetPrice"
+                >
+                    Выбери скин слева
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="controls">
+
+
+            <div class="label">
+                Сумма
+            </div>
+
+            <div class="row">
+
+                <button
+                    class="control"
+                    id="plus1"
+                >
+                    +1
+                </button>
+
+                <button
+                    class="control"
+                    id="plus10"
+                >
+                    +10
+                </button>
+
+                <button
+                    class="control"
+                    id="plus100"
+                >
+                    +100
+                </button>
+
+                <button
+                    class="control"
+                    id="maxAmount"
+                >
+                    MAX
+                </button>
+
+                <input
+                    class="input amount-input"
+                    id="amount"
+                    type="number"
+                    min="1"
+                    value="1"
+                >
+
+            </div>
+
+
+            <div class="label">
+                Коэффициент
+            </div>
+
+            <div class="row">
+
+                <button
+                    class="control multiplier selected"
+                    data-multiplier="2"
+                >
+                    x2
+                </button>
+
+                <button
+                    class="control multiplier"
+                    data-multiplier="4"
+                >
+                    x4
+                </button>
+
+                <button
+                    class="control multiplier"
+                    data-multiplier="8"
+                >
+                    x8
+                </button>
+
+            </div>
+
+
+            <div class="label">
+                Шанс
+            </div>
+
+            <div class="row">
+
+                <button
+                    class="control chance-button"
+                    data-chance="35"
+                >
+                    35%
+                </button>
+
+                <button
+                    class="control chance-button selected"
+                    data-chance="55"
+                >
+                    55%
+                </button>
+
+                <button
+                    class="control chance-button"
+                    data-chance="75"
+                >
+                    75%
+                </button>
+
+            </div>
+
+
+            <button
+                class="main-button"
+                id="upgradeButton"
+            >
+                ПРОКАЧАТЬ
+            </button>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ==================================================
+     SHOP
+=================================================== -->
+
+<section
+    class="section"
+    id="shop"
+>
+
+    <div class="toolbar">
+
+        <div class="toolbar-top">
+
+            <div>
+
+                <div class="title">
+                    МАГАЗИН
+                </div>
+
+                <div
+                    class="count"
+                    id="shopCount"
+                >
+                    600 предметов
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="filters">
+
+            <input
+                class="input search"
+                id="shopSearch"
+                placeholder="🔎 Поиск скина..."
+            >
+
+
+            <div class="price-group">
+
+                От
+
+                <input
+                    class="input price-input"
+                    id="priceFrom"
+                    type="number"
+                    min="0"
+                    placeholder="0"
+                >
+
+            </div>
+
+
+            <div class="price-group">
+
+                До
+
+                <input
+                    class="input price-input"
+                    id="priceTo"
+                    type="number"
+                    min="0"
+                    placeholder="300 000 000"
+                >
+
+            </div>
+
+
+            <select
+                class="input select"
+                id="sortShop"
+            >
+
+                <option value="cheap">
+                    Сначала дешёвые
+                </option>
+
+                <option value="expensive">
+                    Сначала дорогие
+                </option>
+
+                <option value="name">
+                    По названию
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <div
+        class="grid"
+        id="shopGrid"
+    ></div>
+
+</section>
+
+
+<!-- ==================================================
+     INVENTORY
+=================================================== -->
+
+<section
+    class="section"
+    id="inventory"
+>
+
+    <div
+        style="
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:15px;
+        "
+    >
+
+        <div>
+
+            <div class="title">
+                ИНВЕНТАРЬ
+            </div>
+
+            <div
+                class="count"
+                id="inventoryCount"
+            >
+                0 предметов
+            </div>
+
+        </div>
+
+
+        <button
+            class="control"
+            id="sellAll"
+        >
+            ПРОДАТЬ ВСЁ
+        </button>
+
+    </div>
+
+
+    <div
+        class="grid"
+        id="inventoryGrid"
+    ></div>
+
+</section>
+
+
+<!-- ==================================================
+     CASES
+=================================================== -->
+
+<section
+    class="section"
+    id="cases"
+>
+
+    <div class="panel">
+
+        <div class="panel-header">
+
+            <div class="title">
+                КЕЙСЫ
+            </div>
+
+            <div class="subtitle">
+                Открывай кейсы за голду и получай случайные предметы
+            </div>
+
+        </div>
+
+        <div class="cases-content">
+
+            <div
+                class="cases-grid"
+                id="casesGrid"
+            ></div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ==================================================
+     PROMO CODES
+=================================================== -->
+
+<section
+    class="section"
+    id="promo"
+>
+
+    <div class="panel">
+
+        <div class="panel-header">
+
+            <div class="title">
+                ПРОМОКОДЫ
+            </div>
+
+            <div class="subtitle">
+                Введи промокод и получи голду. Каждый код можно активировать только один раз
+            </div>
+
+        </div>
+
+        <div class="promo-content">
+
+            <div class="promo-row">
+
+                <input
+                    class="input"
+                    id="promoInput"
+                    type="text"
+                    placeholder="Введите промокод"
+                    autocomplete="off"
+                >
+
+                <button
+                    class="control execute"
+                    id="promoSubmit"
+                >
+                    АКТИВИРОВАТЬ
+                </button>
+
+            </div>
+
+            <div
+                id="promoMessage"
+                class="promo-message"
+            ></div>
+
+            <div class="promo-used-title">
+                Использованные промокоды
+            </div>
+
+            <div
+                id="promoUsedList"
+                class="promo-used-list"
+            >
+                Пока пусто
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ==================================================
+     DAILY BONUS
+=================================================== -->
+
+<section
+    class="section"
+    id="daily"
+>
+
+    <div class="panel">
+
+        <div class="panel-header">
+
+            <div class="title">
+                ЕЖЕДНЕВНЫЙ БОНУС
+            </div>
+
+            <div class="subtitle">
+                Крути колесо раз в 24 часа и получай бесплатные предметы
+            </div>
+
+        </div>
+
+        <div class="daily-content">
+
+            <div class="daily-wheel-outcomes">
+
+                <div class="daily-outcome none">
+                    <div class="do-emoji">💨</div>
+                    <div class="do-label">Ничего</div>
+                    <div class="do-chance">40%</div>
+                </div>
+
+                <div class="daily-outcome bronze">
+                    <div class="do-emoji">🥉</div>
+                    <div class="do-label">1 000 G</div>
+                    <div class="do-chance">35%</div>
+                </div>
+
+                <div class="daily-outcome silver">
+                    <div class="do-emoji">🥈</div>
+                    <div class="do-label">5 000 G</div>
+                    <div class="do-chance">20%</div>
+                </div>
+
+                <div class="daily-outcome gold">
+                    <div class="do-emoji">🥇</div>
+                    <div class="do-label">10 000 G</div>
+                    <div class="do-chance">5%</div>
+                </div>
+
+            </div>
+
+            <div
+                class="case-reel-wrap"
+                id="dailyReelWrap"
+            >
+
+                <div class="case-reel-pointer"></div>
+
+                <div
+                    class="case-reel"
+                    id="dailyReel"
+                ></div>
+
+            </div>
+
+            <div
+                class="case-result"
+                id="dailyResult"
+            ></div>
+
+            <button
+                class="control execute daily-claim-button"
+                id="dailyClaimButton"
+                style="width:100%;margin-top:14px"
+            >
+                ЗАБРАТЬ БОНУС
+            </button>
+
+            <div
+                id="dailyTimer"
+                class="daily-timer"
+            ></div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ==================================================
+     ADMIN
+=================================================== -->
+
+<section
+    class="section"
+    id="admin"
+>
+
+    <div class="panel">
+
+        <div class="panel-header">
+
+            <div class="title">
+                ADMIN PANEL
+            </div>
+
+            <div class="subtitle">
+                Панель администратора
+            </div>
+
+        </div>
+
+
+        <div class="admin-content">
+
+            <div class="label">
+                Команда
+            </div>
+
+
+            <div class="command-row">
+
+                <input
+                    class="input command-input"
+                    id="adminCommand"
+                    placeholder="/give 1000"
+                    autocomplete="off"
+                >
+
+                <button
+                    class="control execute"
+                    id="executeCommand"
+                >
+                    EXECUTE
+                </button>
+
+            </div>
+
+
+            <div
+                class="admin-log"
+                id="adminLog"
+            >
+                [SYSTEM] Admin panel ready<br>
+                [SYSTEM] Available:
+                /give &lt;number&gt;
+            </div>
+
+
+            <div class="admin-stats">
+
+                <div class="stat">
+
+                    <div
+                        class="stat-value"
+                        id="statGold"
+                    >
+                        500
+                    </div>
+
+                    <div class="stat-label">
+                        Gold
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div
+                        class="stat-value"
+                        id="statItems"
+                    >
+                        0
+                    </div>
+
+                    <div class="stat-label">
+                        Предметов
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div
+                        class="stat-value"
+                        id="statWins"
+                    >
+                        0
+                    </div>
+
+                    <div class="stat-label">
+                        Побед
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div
+                        class="stat-value"
+                        id="statLosses"
+                    >
+                        0
+                    </div>
+
+                    <div class="stat-label">
+                        Поражений
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div
+                        class="stat-value"
+                        id="statCases"
+                    >
+                        0
+                    </div>
+
+                    <div class="stat-label">
+                        Кейсов открыто
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- ==================================================
+     ADMIN PASSWORD MODAL
+=================================================== -->
+
+<div
+    class="modal"
+    id="adminPasswordModal"
+>
+
+    <div class="modal-box" style="width:min(360px,100%)">
+
+        <div class="modal-head">
+
+            <div>
+
+                <div class="title">
+                    ДОСТУП ОГРАНИЧЕН
+                </div>
+
+                <div class="subtitle">
+                    Введите пароль администратора
+                </div>
+
+            </div>
+
+
+            <button
+                class="close-button"
+                id="closeAdminPasswordModal"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <input
+            class="input"
+            id="adminPasswordInput"
+            type="password"
+            placeholder="Пароль"
+            style="width:100%;margin-bottom:10px"
+            autocomplete="off"
+        >
+
+        <div
+            id="adminPasswordError"
+            style="color:#ff6b6b;font-size:13px;min-height:18px;margin-bottom:10px"
+        ></div>
+
+        <button
+            class="control execute"
+            id="adminPasswordSubmit"
+            style="width:100%"
+        >
+            ВОЙТИ
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ==================================================
+     CASE OPEN MODAL
+=================================================== -->
+
+<div
+    class="modal"
+    id="caseModal"
+>
+
+    <div class="modal-box" style="width:min(680px,100%)">
+
+        <div class="modal-head">
+
+            <div>
+
+                <div class="title" id="caseModalTitle">
+                    ОТКРЫТИЕ КЕЙСА
+                </div>
+
+                <div class="subtitle" id="caseModalSubtitle"></div>
+
+            </div>
+
+
+            <button
+                class="close-button"
+                id="closeCaseModal"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div
+            class="case-reel-wrap"
+            id="caseReelWrap"
+        >
+
+            <div class="case-reel-pointer"></div>
+
+            <div
+                class="case-reel"
+                id="caseReel"
+            ></div>
+
+        </div>
+
+
+        <div
+            class="case-result"
+            id="caseResult"
+        ></div>
+
+
+        <button
+            class="control execute"
+            id="caseAgainButton"
+            style="width:100%;margin-top:12px;display:none"
+        >
+            ОТКРЫТЬ ЕЩЁ РАЗ
+        </button>
+
+    </div>
+
+</div>
+
+
+<div id="toast-container"></div>
+
+
+<script>
+
+/* =====================================================
+   DATABASE
+===================================================== */
+
+const weapons = [
+    "M4A1",
+    "AKR",
+    "AKR12",
+    "AWM",
+    "M40",
+    "M16",
+    "FAMAS",
+    "P350",
+    "USP",
+    "G22",
+    "Desert Eagle",
+    "MP7",
+    "MP5",
+    "P90",
+    "UMP45",
+    "TEC-9",
+    "MAC10",
+    "M110",
+    "M60",
+    "SM1014",
+    "SPAS",
+    "Berettas",
+    "FN FAL",
+    "VAL",
+    "M4",
+    "M4A1S",
+    "Karambit",
+    "Stiletto",
+    "Butterfly",
+    "Kunai",
+    "Tanto",
+    "Kukri",
+    "Bayonet",
+    "Flip Knife",
+    "Dual Daggers"
+];
+
+const styles = [
+    "Shadow",
+    "Night",
+    "Dragon",
+    "Phoenix",
+    "Cyber",
+    "Neon",
+    "Inferno",
+    "Violet",
+    "Crimson",
+    "Gold",
+    "Frost",
+    "Ocean",
+    "Reaper",
+    "Spectrum",
+    "Ancient",
+    "Matrix",
+    "Pulse",
+    "Retro",
+    "Digital",
+    "Eclipse",
+    "Venom",
+    "Storm",
+    "Galaxy",
+    "Royal",
+    "Carbon",
+    "Bloodline",
+    "Mystic",
+    "Chrome",
+    "Nova",
+    "Spectre"
+];
+
+const emojis = [
+    "🔫",
+    "🔪",
+    "🗡️",
+    "🎯",
+    "💀",
+    "⚡",
+    "🔥",
+    "❄️",
+    "🌌",
+    "☠️",
+    "🟣",
+    "🟢",
+    "🔵",
+    "🟠",
+    "🟡"
+];
+
+const rarities = [
+    "Common",
+    "Uncommon",
+    "Rare",
+    "Epic",
+    "Legendary",
+    "Mythic"
+];
+
+let skins = [];
+
+
+/* =====================================================
+   GENERATE 600 SKINS
+===================================================== */
+
+function generateSkins(){
+
+    skins = [];
+
+    const total = 800;
+
+    for(
+        let i = 0;
+        i < total;
+        i++
+    ){
+
+        const progress =
+            i / (total - 1);
+
+        const weapon =
+            weapons[
+                i % weapons.length
+            ];
+
+        const style =
+            styles[
+                Math.floor(
+                    i / weapons.length
+                ) % styles.length
+            ];
+
+        let price =
+            10 +
+            Math.pow(
+                progress,
+                3.05
+            ) *
+            (300000000 - 10);
+
+        price =
+            Math.round(price);
+
+        price =
+            Math.max(
+                10,
+                Math.min(
+                    300000000,
+                    price
+                )
+            );
+
+        skins.push({
+
+            id:i + 1,
+
+            name:
+                weapon +
+                " | " +
+                style,
+
+            price:price,
+
+            rarity:
+                rarities[
+                    Math.min(
+                        5,
+                        Math.floor(
+                            progress * 6
+                        )
+                    )
+                ],
+
+            emoji:
+                emojis[
+                    i % emojis.length
+                ]
+
+        });
+
+    }
+
+}
+
+
+/* =====================================================
+   GAME STATE
+===================================================== */
+
+const DEFAULT_GAME = {
+
+    balance:500,
+
+    inventory:[],
+
+    wins:0,
+
+    losses:0,
+
+    upgrades:0,
+
+    customSkins:[],
+
+    casesOpened:0,
+
+    usedPromoCodes:[],
+
+    lastDailyClaim:null,
+
+    freeCasesClaimed:[]
+
+};
+
+let game;
+
+let nextCaseId = 100001;
+
+let selectedSource = null;
+
+let selectedTarget = null;
+
+let multiplier = 2;
+
+let chance = 55;
+
+
+/*
+    Это именно CSS-угол canvas.
+
+    0 = исходное положение.
+
+    При каждом вращении он увеличивается.
+*/
+let wheelRotation = 0;
+
+let spinning = false;
+
+
+/* =====================================================
+   STORAGE
+===================================================== */
+
+let memoryGameSnapshot = null;
+const SAVE_KEY = "skin_upgrade_save_v4";
+
+function saveGame(){
+
+    try{
+
+        const raw =
+            JSON.stringify(game);
+
+        memoryGameSnapshot = raw;
+
+        try{
+
+            localStorage.setItem(
+                SAVE_KEY,
+                raw
+            );
+
+        }catch(storageError){
+
+            console.warn(
+                "localStorage недоступен, сохраняю только в памяти вкладки:",
+                storageError
+            );
+
+        }
+
+    }catch(error){
+
+        console.warn(
+            "Не удалось сохранить игру:",
+            error
+        );
+
+    }
+
+}
+
+
+function loadGame(){
+
+    try{
+
+        let raw = null;
+
+        try{
+
+            raw =
+                localStorage.getItem(
+                    SAVE_KEY
+                );
+
+        }catch(storageError){
+
+            console.warn(
+                "localStorage недоступен при загрузке:",
+                storageError
+            );
+
+        }
+
+        if(!raw){
+
+            raw = memoryGameSnapshot;
+
+        }
+
+        if(!raw){
+
+            game =
+                structuredClone(
+                    DEFAULT_GAME
+                );
+
+            return;
+
+        }
+
+        const saved =
+            JSON.parse(raw);
+
+        const customSkins =
+            Array.isArray(
+                saved.customSkins
+            )
+            ? saved.customSkins.filter(
+                item =>
+                    item &&
+                    Number.isInteger(
+                        Number(item.id)
+                    ) &&
+                    Number(item.id) > 800 &&
+                    typeof item.name === "string" &&
+                    Number(item.price) >= 0
+            )
+            : [];
+
+        customSkins.forEach(item => {
+
+            const id = Number(item.id);
+
+            if(
+                !skins.some(
+                    skin => skin.id === id
+                )
+            ){
+
+                skins.push({
+                    id:id,
+                    name:String(item.name),
+                    price:Number(item.price),
+                    rarity:String(
+                        item.rarity || "Common"
+                    ),
+                    emoji:String(
+                        item.emoji || "🎁"
+                    )
+                });
+
+            }
+
+        });
+
+        nextCaseId =
+            customSkins.reduce(
+                (max, item) =>
+                    Math.max(
+                        max,
+                        Number(item.id) + 1
+                    ),
+                nextCaseId
+            );
+
+        game = {
+
+            balance:
+                Number(saved.balance) >= 0
+                ? Number(saved.balance)
+                : 500,
+
+            inventory:
+                Array.isArray(
+                    saved.inventory
+                )
+                ? saved.inventory
+                    .map(Number)
+                    .filter(
+                        id =>
+                            Number.isInteger(id) &&
+                            skins.some(
+                                skin =>
+                                    skin.id === id
+                            )
+                    )
+                : [],
+
+            wins:
+                Number(saved.wins) >= 0
+                ? Number(saved.wins)
+                : 0,
+
+            losses:
+                Number(saved.losses) >= 0
+                ? Number(saved.losses)
+                : 0,
+
+            upgrades:
+                Number(saved.upgrades) >= 0
+                ? Number(saved.upgrades)
+                : 0,
+
+            customSkins:customSkins,
+
+            casesOpened:
+                Number(saved.casesOpened) >= 0
+                ? Number(saved.casesOpened)
+                : 0,
+
+            usedPromoCodes:
+                Array.isArray(
+                    saved.usedPromoCodes
+                )
+                ? saved.usedPromoCodes
+                    .filter(
+                        code =>
+                            typeof code === "string"
+                    )
+                : [],
+
+            lastDailyClaim:
+                Number.isFinite(
+                    Number(saved.lastDailyClaim)
+                ) &&
+                Number(saved.lastDailyClaim) > 0
+                ? Number(saved.lastDailyClaim)
+                : null,
+
+            freeCasesClaimed:
+                Array.isArray(
+                    saved.freeCasesClaimed
+                )
+                ? saved.freeCasesClaimed
+                    .map(Number)
+                    .filter(
+                        id =>
+                            Number.isInteger(id)
+                    )
+                : []
+
+        };
+
+    }catch(error){
+
+        console.warn(
+            "Ошибка загрузки:",
+            error
+        );
+
+        game =
+            structuredClone(
+                DEFAULT_GAME
+            );
+
+    }
+
+}
+
+
+/* =====================================================
+   UTILITIES
+===================================================== */
+
+function formatGold(value){
+
+    return Number(value)
+        .toLocaleString(
+            "ru-RU"
+        );
+
+}
+
+
+function getSkin(id){
+
+    return skins.find(
+        skin =>
+            skin.id === Number(id)
+    ) || null;
+
+}
+
+
+function escapeHTML(value){
+
+    return String(value)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+
+}
+
+
+/* =====================================================
+   UI UPDATE
+===================================================== */
+
+function updateUI(){
+
+    document.getElementById(
+        "balance"
+    ).textContent =
+        formatGold(
+            game.balance
+        );
+
+    document.getElementById(
+        "statGold"
+    ).textContent =
+        formatGold(
+            game.balance
+        );
+
+    document.getElementById(
+        "statItems"
+    ).textContent =
+        game.inventory.length;
+
+    document.getElementById(
+        "statWins"
+    ).textContent =
+        game.wins;
+
+    document.getElementById(
+        "statLosses"
+    ).textContent =
+        game.losses;
+
+    document.getElementById(
+        "statCases"
+    ).textContent =
+        game.casesOpened || 0;
+
+    saveGame();
+
+}
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+function showToast(
+    message,
+    type = ""
+){
+
+    const toast =
+        document.createElement(
+            "div"
+        );
+
+    toast.className =
+        "toast " + type;
+
+    toast.textContent =
+        message;
+
+    document
+        .getElementById(
+            "toast-container"
+        )
+        .appendChild(toast);
+
+    setTimeout(
+        () => toast.remove(),
+        2500
+    );
+
+}
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+document
+    .querySelectorAll(
+        ".nav-button"
+    )
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                document
+                    .querySelectorAll(
+                        ".nav-button"
+                    )
+                    .forEach(
+                        b =>
+                            b.classList
+                                .remove(
+                                    "active"
+                                )
+                    );
+
+                document
+                    .querySelectorAll(
+                        ".section"
+                    )
+                    .forEach(
+                        section =>
+                            section.classList
+                                .remove(
+                                    "active"
+                                )
+                    );
+
+                button.classList.add(
+                    "active"
+                );
+
+                document
+                    .getElementById(
+                        button.dataset.page
+                    )
+                    .classList.add(
+                        "active"
+                    );
+
+                if(
+                    button.dataset.page ===
+                    "shop"
+                ){
+
+                    renderShop();
+
+                }
+
+                if(
+                    button.dataset.page ===
+                    "inventory"
+                ){
+
+                    renderInventory();
+
+                }
+
+                if(
+                    button.dataset.page ===
+                    "cases"
+                ){
+
+                    renderCases();
+
+                }
+
+                if(
+                    button.dataset.page ===
+                    "promo"
+                ){
+
+                    renderPromo();
+
+                }
+
+                if(
+                    button.dataset.page ===
+                    "daily"
+                ){
+
+                    renderDaily();
+
+                }
+
+            }
+        );
+
+    });
+
+
+function openPage(page){
+
+    const button =
+        document.querySelector(
+            `.nav-button[data-page="${page}"]`
+        );
+
+    if(button){
+
+        button.click();
+
+    }
+
+}
+
+
+/*
+    Клик по слоту "Выбери скин" на странице
+    апгрейдера раньше ничего не делал —
+    теперь он открывает Инвентарь,
+    откуда предмет реально выбирается.
+*/
+
+const sourceSlotElement =
+    document.getElementById(
+        "sourceSlot"
+    );
+
+if(sourceSlotElement){
+
+    sourceSlotElement.style.cursor =
+        "pointer";
+
+    sourceSlotElement.addEventListener(
+        "click",
+        () => {
+
+            if(spinning) return;
+
+            if(selectedSource){
+
+                clearSource();
+
+                return;
+
+            }
+
+            showToast(
+                "Выбери предмет в Инвентаре",
+                "good"
+            );
+
+            openPage("inventory");
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   ADMIN PASSWORD GATE
+===================================================== */
+
+const ADMIN_PASSWORD = "Bulat55";
+
+let adminAuthed = false;
+
+const adminNavButton =
+    document.querySelector(
+        '.nav-button[data-page="admin"]'
+    );
+
+const adminPasswordModal =
+    document.getElementById(
+        "adminPasswordModal"
+    );
+
+const adminPasswordInput =
+    document.getElementById(
+        "adminPasswordInput"
+    );
+
+const adminPasswordError =
+    document.getElementById(
+        "adminPasswordError"
+    );
+
+function openAdminPasswordModal(){
+
+    adminPasswordError.textContent = "";
+    adminPasswordInput.value = "";
+
+    adminPasswordModal.classList.add(
+        "show"
+    );
+
+    setTimeout(
+        () => adminPasswordInput.focus(),
+        50
+    );
+
+}
+
+function closeAdminPasswordModal(){
+
+    adminPasswordModal.classList.remove(
+        "show"
+    );
+
+}
+
+function tryAdminLogin(){
+
+    const value =
+        adminPasswordInput.value;
+
+    if(value === ADMIN_PASSWORD){
+
+        adminAuthed = true;
+
+        closeAdminPasswordModal();
+
+        openPage("admin");
+
+    }else{
+
+        adminPasswordError.textContent =
+            "Неверный пароль";
+
+        adminPasswordInput.value = "";
+        adminPasswordInput.focus();
+
+    }
+
+}
+
+if(adminNavButton){
+
+    // capture phase: runs before the normal
+    // page-switch listener, so we can block it
+    adminNavButton.addEventListener(
+        "click",
+        event => {
+
+            if(!adminAuthed){
+
+                event.stopImmediatePropagation();
+                event.preventDefault();
+
+                openAdminPasswordModal();
+
+            }
+
+        },
+        true
+    );
+
+}
+
+document
+    .getElementById(
+        "closeAdminPasswordModal"
+    )
+    .addEventListener(
+        "click",
+        closeAdminPasswordModal
+    );
+
+document
+    .getElementById(
+        "adminPasswordSubmit"
+    )
+    .addEventListener(
+        "click",
+        tryAdminLogin
+    );
+
+adminPasswordInput.addEventListener(
+    "keydown",
+    event => {
+
+        if(event.key === "Enter"){
+
+            tryAdminLogin();
+
+        }
+
+    }
+);
+
+adminPasswordModal.addEventListener(
+    "click",
+    event => {
+
+        if(
+            event.target.id ===
+            "adminPasswordModal"
+        ){
+
+            closeAdminPasswordModal();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   SKIN CARD
+===================================================== */
+
+function createSkinCard(
+    skin,
+    mode
+){
+
+    let actions = "";
+
+    if(mode === "shop"){
+
+        actions = `
+            <button
+                class="small-button"
+                data-buy="${skin.id}"
+            >
+                КУПИТЬ
+            </button>
+        `;
+
+    }else{
+
+        actions = `
+            <button
+                class="small-button"
+                data-upgrade="${skin.id}"
+            >
+                АПГРЕЙД
+            </button>
+
+            <button
+                class="small-button sell"
+                data-sell="${skin.id}"
+            >
+                ПРОДАТЬ
+            </button>
+        `;
+
+    }
+
+    return `
+        <div class="skin-card">
+
+            <div class="skin-image">
+
+                <div class="rarity">
+                    ${escapeHTML(skin.rarity)}
+                </div>
+
+                ${skin.emoji}
+
+            </div>
+
+            <div class="skin-name">
+                ${escapeHTML(skin.name)}
+            </div>
+
+            <div class="skin-price">
+                ${formatGold(skin.price)} G
+            </div>
+
+            <div class="card-actions">
+                ${actions}
+            </div>
+
+        </div>
+    `;
+
+}
+
+
+/* =====================================================
+   SHOP
+===================================================== */
+
+function renderShop(){
+
+    const search =
+        document
+            .getElementById(
+                "shopSearch"
+            )
+            .value
+            .trim()
+            .toLowerCase();
+
+    const from =
+        Number(
+            document
+                .getElementById(
+                    "priceFrom"
+                )
+                .value
+        ) || 0;
+
+    const toInput =
+        document
+            .getElementById(
+                "priceTo"
+            )
+            .value;
+
+    const to =
+        toInput === ""
+        ? 300000000
+        : Number(toInput);
+
+
+    let list =
+        skins.filter(
+            skin => {
+
+                const matchesSearch =
+                    skin.name
+                        .toLowerCase()
+                        .includes(
+                            search
+                        );
+
+                const matchesPrice =
+                    skin.price >= from &&
+                    skin.price <= to;
+
+                return (
+                    matchesSearch &&
+                    matchesPrice
+                );
+
+            }
+        );
+
+
+    const sort =
+        document
+            .getElementById(
+                "sortShop"
+            )
+            .value;
+
+
+    if(sort === "cheap"){
+
+        list.sort(
+            (a,b) =>
+                a.price - b.price
+        );
+
+    }
+
+    if(sort === "expensive"){
+
+        list.sort(
+            (a,b) =>
+                b.price - a.price
+        );
+
+    }
+
+    if(sort === "name"){
+
+        list.sort(
+            (a,b) =>
+                a.name.localeCompare(
+                    b.name
+                )
+        );
+
+    }
+
+
+    document.getElementById(
+        "shopCount"
+    ).textContent =
+        list.length +
+        " предметов";
+
+
+    const grid =
+        document.getElementById(
+            "shopGrid"
+        );
+
+
+    if(!list.length){
+
+        grid.innerHTML = `
+            <div class="empty">
+                Ничего не найдено
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    grid.innerHTML =
+        list
+            .map(
+                skin =>
+                    createSkinCard(
+                        skin,
+                        "shop"
+                    )
+            )
+            .join("");
+
+}
+
+
+/* =====================================================
+   SHOP EVENTS
+===================================================== */
+
+document
+    .getElementById(
+        "shopGrid"
+    )
+    .addEventListener(
+        "click",
+        event => {
+
+            const button =
+                event.target.closest(
+                    "[data-buy]"
+                );
+
+            if(!button)
+                return;
+
+            buySkin(
+                Number(
+                    button.dataset.buy
+                )
+            );
+
+        }
+    );
+
+
+[
+    "shopSearch",
+    "priceFrom",
+    "priceTo",
+    "sortShop"
+]
+.forEach(id => {
+
+    document
+        .getElementById(id)
+        .addEventListener(
+            "input",
+            renderShop
+        );
+
+    document
+        .getElementById(id)
+        .addEventListener(
+            "change",
+            renderShop
+        );
+
+});
+
+
+/* =====================================================
+   BUY
+===================================================== */
+
+function buySkin(id){
+
+    const skin =
+        getSkin(id);
+
+    if(!skin)
+        return;
+
+
+    if(game.balance < skin.price){
+
+        showToast(
+            "Недостаточно Gold",
+            "bad"
+        );
+
+        return;
+
+    }
+
+
+    game.balance -=
+        skin.price;
+
+    game.inventory.push(
+        skin.id
+    );
+
+
+    updateUI();
+
+    showToast(
+        "Куплен " +
+        skin.name +
+        " за " +
+        formatGold(
+            skin.price
+        ) +
+        " G",
+        "good"
+    );
+
+}
+
+
+/* =====================================================
+   INVENTORY
+===================================================== */
+
+function getInventorySkins(){
+
+    return game.inventory
+        .map(
+            id => getSkin(id)
+        )
+        .filter(Boolean);
+
+}
+
+
+function renderInventory(){
+
+    const list =
+        getInventorySkins();
+
+
+    document.getElementById(
+        "inventoryCount"
+    ).textContent =
+        list.length +
+        " предметов";
+
+
+    const grid =
+        document.getElementById(
+            "inventoryGrid"
+        );
+
+
+    if(!list.length){
+
+        grid.innerHTML = `
+            <div class="empty">
+                Инвентарь пуст.<br>
+                Купи первый скин в магазине.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    grid.innerHTML =
+        list
+            .map(
+                skin =>
+                    createSkinCard(
+                        skin,
+                        "inventory"
+                    )
+            )
+            .join("");
+
+}
+
+
+/* =====================================================
+   INVENTORY EVENTS
+===================================================== */
+
+document
+    .getElementById(
+        "inventoryGrid"
+    )
+    .addEventListener(
+        "click",
+        event => {
+
+            const upgradeButton =
+                event.target.closest(
+                    "[data-upgrade]"
+                );
+
+            if(upgradeButton){
+
+                selectSource(
+                    Number(
+                        upgradeButton
+                            .dataset
+                            .upgrade
+                    )
+                );
+
+                return;
+
+            }
+
+
+            const sellButton =
+                event.target.closest(
+                    "[data-sell]"
+                );
+
+            if(sellButton){
+
+                sellSkin(
+                    Number(
+                        sellButton
+                            .dataset
+                            .sell
+                    )
+                );
+
+            }
+
+        }
+    );
+
+
+/* =====================================================
+   SELL
+===================================================== */
+
+function sellSkin(id){
+
+    const index =
+        game.inventory.indexOf(
+            id
+        );
+
+    if(index === -1)
+        return;
+
+
+    const skin =
+        getSkin(id);
+
+    if(!skin)
+        return;
+
+
+    game.inventory.splice(
+        index,
+        1
+    );
+
+    game.balance +=
+        skin.price;
+
+
+    if(
+        selectedSource &&
+        selectedSource.id === id
+    ){
+
+        clearSource();
+
+    }
+
+
+    updateUI();
+
+    renderInventory();
+
+
+    showToast(
+        "Продано за " +
+        formatGold(
+            skin.price
+        ) +
+        " G",
+        "good"
+    );
+
+}
+
+
+document
+    .getElementById(
+        "sellAll"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            const list =
+                getInventorySkins();
+
+            if(!list.length){
+
+                showToast(
+                    "Инвентарь пуст",
+                    "bad"
+                );
+
+                return;
+
+            }
+
+
+            let total = 0;
+
+            for(
+                const skin of list
+            ){
+
+                total +=
+                    skin.price;
+
+            }
+
+
+            game.inventory = [];
+
+            game.balance +=
+                total;
+
+
+            clearSource();
+
+            updateUI();
+
+            renderInventory();
+
+
+            showToast(
+                "Продано всё: +" +
+                formatGold(total) +
+                " G",
+                "good"
+            );
+
+        }
+    );
+
+
+/* =====================================================
+   SOURCE
+===================================================== */
+
+function selectSource(id){
+
+    const skin =
+        getSkin(id);
+
+    if(!skin)
+        return;
+
+
+    if(
+        !game.inventory.includes(
+            skin.id
+        )
+    ){
+
+        showToast(
+            "Этого скина нет в инвентаре",
+            "bad"
+        );
+
+        return;
+
+    }
+
+
+    selectedSource =
+        skin;
+
+
+    document.getElementById(
+        "sourceArt"
+    ).textContent =
+        skin.emoji;
+
+    document.getElementById(
+        "sourceName"
+    ).textContent =
+        skin.name;
+
+    document.getElementById(
+        "sourcePrice"
+    ).textContent =
+        formatGold(
+            skin.price
+        ) +
+        " G";
+
+
+    updateTargetFromSettings();
+
+    openPage("upgrade");
+
+}
+
+
+function clearSource(){
+
+    selectedSource =
+        null;
+
+
+    document.getElementById(
+        "sourceArt"
+    ).textContent =
+        "🎁";
+
+    document.getElementById(
+        "sourceName"
+    ).textContent =
+        "Выбери скин";
+
+    document.getElementById(
+        "sourcePrice"
+    ).textContent =
+        "Из инвентаря";
+
+}
+
+
+/* =====================================================
+   TARGET
+===================================================== */
+
+function findClosestSkin(
+    targetPrice
+){
+
+    if(!skins.length)
+        return null;
+
+
+    let best =
+        skins[0];
+
+    let bestDifference =
+        Math.abs(
+            best.price -
+            targetPrice
+        );
+
+
+    for(
+        const skin of skins
+    ){
+
+        const difference =
+            Math.abs(
+                skin.price -
+                targetPrice
+            );
+
+
+        if(
+            difference <
+            bestDifference
+        ){
+
+            best =
+                skin;
+
+            bestDifference =
+                difference;
+
+        }
+
+    }
+
+
+    return best;
+
+}
+
+
+function updateTargetFromSettings(){
+
+    if(!selectedSource)
+        return;
+
+
+    /*
+        Для каждой вероятности
+        коэффициент цели меняется.
+
+        Это именно визуальная игровая
+        механика этого демо.
+    */
+
+    const coefficient =
+        100 / chance;
+
+
+    const targetPrice =
+        selectedSource.price *
+        coefficient;
+
+
+    const target =
+        findClosestSkin(
+            targetPrice
+        );
+
+
+    if(target)
+        setTarget(
+            target
+        );
+
+}
+
+
+function setTarget(skin){
+
+    if(!skin)
+        return;
+
+
+    selectedTarget =
+        skin;
+
+
+    document.getElementById(
+        "targetArt"
+    ).textContent =
+        skin.emoji;
+
+    document.getElementById(
+        "targetName"
+    ).textContent =
+        skin.name;
+
+    document.getElementById(
+        "targetPrice"
+    ).textContent =
+        formatGold(
+            skin.price
+        ) +
+        " G";
+
+}
+
+
+/* =====================================================
+   MULTIPLIER
+===================================================== */
+
+document
+    .querySelectorAll(
+        ".multiplier"
+    )
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                if(spinning)
+                    return;
+
+
+                multiplier =
+                    Number(
+                        button.dataset
+                            .multiplier
+                    );
+
+
+                document
+                    .querySelectorAll(
+                        ".multiplier"
+                    )
+                    .forEach(
+                        b =>
+                            b.classList
+                                .remove(
+                                    "selected"
+                                )
+                    );
+
+
+                button.classList.add(
+                    "selected"
+                );
+
+
+                updateTargetFromSettings();
+
+            }
+        );
+
+    });
+
+
+/* =====================================================
+   CHANCE
+===================================================== */
+
+document
+    .querySelectorAll(
+        ".chance-button"
+    )
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                if(spinning)
+                    return;
+
+
+                chance =
+                    Number(
+                        button.dataset
+                            .chance
+                    );
+
+
+                document.getElementById(
+                    "chanceNumber"
+                ).textContent =
+                    chance +
+                    "%";
+
+
+                document
+                    .querySelectorAll(
+                        ".chance-button"
+                    )
+                    .forEach(
+                        b =>
+                            b.classList
+                                .remove(
+                                    "selected"
+                                )
+                    );
+
+
+                button.classList.add(
+                    "selected"
+                );
+
+
+                drawWheel(
+                    chance
+                );
+
+
+                updateTargetFromSettings();
+
+            }
+        );
+
+    });
+
+
+/* =====================================================
+   AMOUNT
+===================================================== */
+
+document
+    .getElementById(
+        "plus1"
+    )
+    .addEventListener(
+        "click",
+        () => addAmount(1)
+    );
+
+
+document
+    .getElementById(
+        "plus10"
+    )
+    .addEventListener(
+        "click",
+        () => addAmount(10)
+    );
+
+
+document
+    .getElementById(
+        "plus100"
+    )
+    .addEventListener(
+        "click",
+        () => addAmount(100)
+    );
+
+
+document
+    .getElementById(
+        "maxAmount"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            document.getElementById(
+                "amount"
+            ).value =
+                Math.floor(
+                    game.balance
+                );
+
+        }
+    );
+
+
+function addAmount(value){
+
+    const input =
+        document.getElementById(
+            "amount"
+        );
+
+    const current =
+        Number(
+            input.value
+        ) || 0;
+
+
+    input.value =
+        Math.max(
+            1,
+            current + value
+        );
+
+}
+
+
+/* =====================================================
+   WHEEL DRAW
+===================================================== */
+
+function drawWheel(
+    winPercent
+){
+
+    const canvas =
+        document.getElementById(
+            "wheel"
+        );
+
+    const ctx =
+        canvas.getContext(
+            "2d"
+        );
+
+
+    const size =
+        canvas.width;
+
+    const center =
+        size / 2;
+
+    const radius =
+        109;
+
+
+    ctx.clearRect(
+        0,
+        0,
+        size,
+        size
+    );
+
+
+    /*
+        Верхняя точка = -90°.
+
+        Именно здесь находится
+        неподвижная стрелка.
+
+        Зелёная часть начинается
+        прямо под ней.
+    */
+
+    const start =
+        -Math.PI / 2;
+
+
+    const greenAngle =
+        Math.PI * 2 *
+        (winPercent / 100);
+
+
+    /*
+        GREEN
+    */
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        center,
+        center
+    );
+
+    ctx.arc(
+        center,
+        center,
+        radius,
+        start,
+        start + greenAngle
+    );
+
+    ctx.closePath();
+
+    ctx.fillStyle =
+        "#45df8b";
+
+    ctx.fill();
+
+
+    /*
+        GRAY
+    */
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        center,
+        center
+    );
+
+    ctx.arc(
+        center,
+        center,
+        radius,
+        start + greenAngle,
+        start + Math.PI * 2
+    );
+
+    ctx.closePath();
+
+    ctx.fillStyle =
+        "#252a35";
+
+    ctx.fill();
+
+
+    /*
+        OUTER BORDER
+    */
+
+    ctx.beginPath();
+
+    ctx.arc(
+        center,
+        center,
+        radius,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.lineWidth =
+        5;
+
+    ctx.strokeStyle =
+        "#414758";
+
+    ctx.stroke();
+
+
+    /*
+        DIVIDER
+    */
+
+    const divider =
+        start +
+        greenAngle;
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        center,
+        center
+    );
+
+    ctx.lineTo(
+        center +
+        Math.cos(divider) *
+        radius,
+
+        center +
+        Math.sin(divider) *
+        radius
+    );
+
+    ctx.lineWidth =
+        3;
+
+    ctx.strokeStyle =
+        "#11141b";
+
+    ctx.stroke();
+
+
+    /*
+        TEXT
+    */
+
+    ctx.save();
+
+    ctx.translate(
+        center,
+        center
+    );
+
+    ctx.rotate(
+        start +
+        greenAngle / 2
+    );
+
+    ctx.fillStyle =
+        "#ffffff";
+
+    ctx.font =
+        "900 17px Arial";
+
+    ctx.textAlign =
+        "center";
+
+    ctx.textBaseline =
+        "middle";
+
+    ctx.fillText(
+        winPercent + "%",
+        radius * .57,
+        0
+    );
+
+    ctx.restore();
+
+}
+
+
+/* =====================================================
+   NORMALIZE ANGLE
+===================================================== */
+
+function normalizeAngle(
+    degrees
+){
+
+    let result =
+        degrees % 360;
+
+    if(result < 0)
+        result += 360;
+
+    return result;
+
+}
+
+
+/* =====================================================
+   WHEEL SPIN
+===================================================== */
+
+function spinWheel(
+    winPercent
+){
+
+    return new Promise(
+        resolve => {
+
+            const canvas =
+                document.getElementById(
+                    "wheel"
+                );
+
+            const container =
+                document.getElementById(
+                    "wheelContainer"
+                );
+
+
+            /*
+                Никакого случайного CSS
+                "поставить конечный угол"
+                перед анимацией.
+
+                Сначала canvas остаётся
+                в текущем положении.
+            */
+
+            const startRotation =
+                wheelRotation;
+
+
+            canvas.style.transition =
+                "none";
+
+            canvas.style.transform =
+                `rotate(${startRotation}deg)`;
+
+
+            /*
+                Принудительно просим браузер
+                применить текущее положение.
+
+                Это критично для корректной
+                CSS-анимации.
+            */
+
+            void canvas.offsetWidth;
+
+
+            /*
+                Выбираем физическую точку,
+                на которой остановится стрелка.
+
+                0° = зелёная зона начинается
+                ровно сверху.
+
+                winPercent = 75:
+
+                0..270 = зелёная
+
+                270..360 = серая
+            */
+
+            const greenSize =
+                360 *
+                (winPercent / 100);
+
+
+            let localPointerAngle;
+
+
+            /*
+                Небольшой отступ от границ,
+                чтобы стрелка не стояла
+                прямо на линии разделения.
+            */
+
+            const padding =
+                Math.min(
+                    3,
+                    greenSize / 4,
+                    (360 - greenSize) / 4
+                );
+
+
+            /*
+                Если вероятность 100%,
+                серой зоны нет.
+            */
+
+            const forceWin =
+                winPercent >= 100;
+
+
+            const forceLose =
+                winPercent <= 0;
+
+
+            const random =
+                Math.random();
+
+
+            if(
+                forceWin ||
+                (
+                    !forceLose &&
+                    random <
+                    winPercent / 100
+                )
+            ){
+
+                /*
+                    Зелёная зона:
+                    [0, greenSize)
+                */
+
+                const available =
+                    Math.max(
+                        0,
+                        greenSize -
+                        padding * 2
+                    );
+
+
+                localPointerAngle =
+                    padding +
+                    Math.random() *
+                    available;
+
+            }else{
+
+                /*
+                    Серая зона:
+                    [greenSize, 360)
+                */
+
+                const available =
+                    Math.max(
+                        0,
+                        360 -
+                        greenSize -
+                        padding * 2
+                    );
+
+
+                localPointerAngle =
+                    greenSize +
+                    padding +
+                    Math.random() *
+                    available;
+
+            }
+
+
+            /*
+                Нам нужно, чтобы эта локальная
+                точка оказалась ровно сверху.
+
+                При положительном CSS rotate()
+                колесо вращается по часовой стрелке.
+
+                Поэтому:
+
+                    finalRotation =
+                    -localPointerAngle
+            */
+
+            const desiredRotation =
+                -localPointerAngle;
+
+
+            const current =
+                normalizeAngle(
+                    startRotation
+                );
+
+            const desired =
+                normalizeAngle(
+                    desiredRotation
+                );
+
+
+            let delta =
+                desired -
+                current;
+
+
+            if(delta < 0)
+                delta += 360;
+
+
+            /*
+                Минимум 7 полных оборотов.
+            */
+
+            const fullTurns =
+                360 * 7;
+
+
+            wheelRotation =
+                startRotation +
+                fullTurns +
+                delta;
+
+
+            /*
+                Теперь задаём АНИМАЦИЮ
+                от уже применённого
+                startRotation к новому
+                wheelRotation.
+            */
+
+            canvas.style.transition =
+                "transform 4.8s cubic-bezier(.12,.72,.08,1)";
+
+
+            canvas.style.transform =
+                `rotate(${wheelRotation}deg)`;
+
+
+            container.classList.add(
+                "spinning"
+            );
+
+
+            const duration =
+                4850;
+
+
+            setTimeout(
+                () => {
+
+                    container.classList.remove(
+                        "spinning"
+                    );
+
+
+                    /*
+                        После окончания берём
+                        фактический CSS-угол.
+
+                        Это уже не предположение.
+                    */
+
+                    const finalCssAngle =
+                        normalizeAngle(
+                            wheelRotation
+                        );
+
+
+                    /*
+                        Какая точка колеса
+                        находится под стрелкой?
+
+                        Стрелка смотрит вверх,
+                        поэтому берём обратный
+                        угол вращения.
+                    */
+
+                    const actualPointerAngle =
+                        normalizeAngle(
+                            -finalCssAngle
+                        );
+
+
+                    /*
+                        И вот здесь окончательно
+                        определяем результат.
+
+                        Зелёная зона:
+                        0 <= angle < greenSize
+                    */
+
+                    const won =
+                        forceWin ||
+                        (
+                            !forceLose &&
+                            actualPointerAngle >= 0 &&
+                            actualPointerAngle <
+                            greenSize
+                        );
+
+
+                    resolve({
+                        won,
+                        actualPointerAngle,
+                        greenSize
+                    });
+
+                },
+                duration
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   UPGRADE
+===================================================== */
+
+document
+    .getElementById(
+        "upgradeButton"
+    )
+    .addEventListener(
+        "click",
+        startUpgrade
+    );
+
+
+async function startUpgrade(){
+
+    if(spinning)
+        return;
+
+
+    if(!selectedSource){
+
+        showToast(
+            "Сначала выбери скин",
+            "bad"
+        );
+
+        return;
+
+    }
+
+
+    if(!selectedTarget){
+
+        showToast(
+            "Сначала выбери цель",
+            "bad"
+        );
+
+        return;
+
+    }
+
+
+    /*
+        Проверяем, что предмет всё ещё
+        существует в инвентаре.
+    */
+
+    const sourceIndex =
+        game.inventory.indexOf(
+            selectedSource.id
+        );
+
+
+    if(sourceIndex === -1){
+
+        clearSource();
+
+        showToast(
+            "Этот скин уже использован",
+            "bad"
+        );
+
+        return;
+
+    }
+
+
+    const amount =
+        Number(
+            document.getElementById(
+                "amount"
+            ).value
+        );
+
+
+    if(
+        !Number.isFinite(amount) ||
+        amount <= 0
+    ){
+
+        showToast(
+            "Укажи корректную сумму",
+            "bad"
+        );
+
+        return;
+
+    }
+
+
+    if(amount > game.balance){
+
+        showToast(
+            "Недостаточно Gold",
+            "bad"
+        );
+
+        return;
+
+    }
+
+
+    /*
+        Проверяем цель ДО удаления исходника.
+    */
+
+    const target =
+        getSkin(
+            selectedTarget.id
+        );
+
+
+    if(!target){
+
+        showToast(
+            "Цель больше недоступна",
+            "bad"
+        );
+
+        return;
+
+    }
+
+
+    spinning = true;
+
+
+    const button =
+        document.getElementById(
+            "upgradeButton"
+        );
+
+
+    button.disabled = true;
+
+    button.textContent =
+        "КОЛЕСО КРУТИТСЯ...";
+
+
+    document
+        .querySelectorAll(
+            ".control"
+        )
+        .forEach(
+            element => {
+
+                /*
+                    Не блокируем саму кнопку
+                    апгрейда дважды,
+                    а блокируем настройки.
+                */
+
+                if(
+                    element.classList.contains(
+                        "chance-button"
+                    ) ||
+                    element.classList.contains(
+                        "multiplier"
+                    )
+                ){
+
+                    element.disabled = true;
+
+                }
+
+            }
+        );
+
+
+    /*
+        ============================================
+        ВАЖНО:
+        предмет удаляется ДО начала вращения.
+
+        Поэтому проигрыш физически не может
+        оставить его в инвентаре.
+        ============================================
+    */
+
+    game.inventory.splice(
+        sourceIndex,
+        1
+    );
+
+
+    /*
+        Списываем стоимость попытки.
+    */
+
+    game.balance -=
+        amount;
+
+
+    game.upgrades++;
+
+
+    updateUI();
+
+    renderInventory();
+
+
+    /*
+        Фиксируем цель этой попытки.
+
+        Пользователь не сможет поменять
+        её во время вращения.
+    */
+
+    const targetId =
+        target.id;
+
+    const finalChance =
+        chance;
+
+
+    try{
+
+        const result =
+            await spinWheel(
+                finalChance
+            );
+
+
+        if(result.won){
+
+            /*
+                Победа:
+                добавляем выбранную цель.
+            */
+
+            game.inventory.push(
+                targetId
+            );
+
+            game.wins++;
+
+
+            showToast(
+                "🎉 ПОБЕДА! " +
+                target.name +
+                " получен",
+                "good"
+            );
+
+        }else{
+
+            /*
+                Проигрыш:
+                НИЧЕГО не возвращаем.
+
+                Исходник уже был удалён
+                перед началом вращения.
+            */
+
+            game.losses++;
+
+
+            showToast(
+                "💥 НЕУДАЧА! Скин сгорел",
+                "bad"
+            );
+
+        }
+
+
+    }catch(error){
+
+        /*
+            Если JS неожиданно получил ошибку,
+            не выдаём игроку награду.
+        */
+
+        console.error(
+            error
+        );
+
+        game.losses++;
+
+
+        showToast(
+            "Произошла ошибка апгрейда",
+            "bad"
+        );
+
+    }
+
+
+    /*
+        Полностью завершаем попытку.
+    */
+
+    clearSource();
+
+
+    button.disabled = false;
+
+    button.textContent =
+        "ПРОКАЧАТЬ";
+
+
+    document
+        .querySelectorAll(
+            ".chance-button,.multiplier"
+        )
+        .forEach(
+            element =>
+                element.disabled = false
+        );
+
+
+    spinning = false;
+
+
+    updateUI();
+
+    renderInventory();
+
+}
+
+
+/* =====================================================
+   ADMIN
+===================================================== */
+
+document
+    .getElementById(
+        "executeCommand"
+    )
+    .addEventListener(
+        "click",
+        executeCommand
+    );
+
+
+document
+    .getElementById(
+        "adminCommand"
+    )
+    .addEventListener(
+        "keydown",
+        event => {
+
+            if(
+                event.key ===
+                "Enter"
+            ){
+
+                executeCommand();
+
+            }
+
+        }
+    );
+
+
+function executeCommand(){
+
+    const input =
+        document.getElementById(
+            "adminCommand"
+        );
+
+
+    const command =
+        input.value.trim();
+
+
+    const log =
+        document.getElementById(
+            "adminLog"
+        );
+
+
+    /*
+        Поддерживаем:
+        /give 37
+        /give 1000000
+        /give 20.5
+    */
+
+    const match =
+        command.match(
+            /^\/give\s+([0-9]+(?:\.[0-9]+)?)$/i
+        );
+
+
+    if(!match){
+
+        log.innerHTML +=
+            `<br>[ERROR] Unknown command:
+            ${escapeHTML(command)}`;
+
+        log.scrollTop =
+            log.scrollHeight;
+
+
+        showToast(
+            "Неизвестная команда",
+            "bad"
+        );
+
+        return;
+
+    }
+
+
+    const amount =
+        Number(
+            match[1]
+        );
+
+
+    if(
+        !Number.isFinite(amount) ||
+        amount <= 0
+    ){
+
+        showToast(
+            "Некорректная сумма",
+            "bad"
+        );
+
+        return;
+
+    }
+
+
+    game.balance +=
+        amount;
+
+
+    updateUI();
+
+
+    log.innerHTML +=
+        `<br>
+        <span style="color:#72eaa5">
+        [ADMIN] /give ${formatGold(amount)}
+        → balance = ${formatGold(game.balance)} G
+        </span>`;
+
+
+    log.scrollTop =
+        log.scrollHeight;
+
+
+    showToast(
+        "+" +
+        formatGold(amount) +
+        " G",
+        "good"
+    );
+
+
+    input.value = "";
+
+}
+
+
+/* =====================================================
+   CASES
+===================================================== */
+
+/*
+    Единая картинка для всех кейсов —
+    встроенный SVG, без внешних файлов,
+    поэтому она гарантированно
+    отображается offline.
+*/
+
+const CASE_IMAGE =
+    "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Cdefs%3E%3ClinearGradient%20id='g'%20x1='0'%20y1='0'%20x2='1'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%238064ff'/%3E%3Cstop%20offset='1'%20stop-color='%234b34b8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20x='8'%20y='38'%20width='84'%20height='48'%20rx='6'%20fill='url(%23g)'%20stroke='%23241a5c'%20stroke-width='3'/%3E%3Crect%20x='8'%20y='38'%20width='84'%20height='13'%20fill='%23a996ff'%20opacity='0.35'/%3E%3Crect%20x='41'%20y='38'%20width='18'%20height='48'%20fill='%23241a5c'%20opacity='0.45'/%3E%3Cpath%20d='M8%2038%20L50%2016%20L92%2038%20L92%2049%20L50%2027%20L8%2049%20Z'%20fill='%23a996ff'%20stroke='%23241a5c'%20stroke-width='3'%20stroke-linejoin='round'/%3E%3Ccircle%20cx='50'%20cy='62'%20r='10'%20fill='%23ffe27a'%20stroke='%23241a5c'%20stroke-width='2'/%3E%3Crect%20x='45'%20y='60'%20width='10'%20height='12'%20rx='2'%20fill='%23241a5c'/%3E%3C/svg%3E";
+
+const CASES = [
+    {
+        id:1,
+        name:"Бесплатный кейс I",
+        price:0,
+        free:true,
+        min:5,
+        mid1:30,
+        mid2:70,
+        max:150
+    },
+    {
+        id:2,
+        name:"Бесплатный кейс II",
+        price:0,
+        free:true,
+        min:20,
+        mid1:100,
+        mid2:220,
+        max:500
+    },
+    {
+        id:3,
+        name:"Бесплатный кейс III",
+        price:0,
+        free:true,
+        min:50,
+        mid1:250,
+        mid2:600,
+        max:1500
+    },
+    {
+        id:4,
+        name:"Мини-кейс",
+        price:5,
+        free:false,
+        min:1,
+        mid1:3,
+        mid2:6,
+        max:15
+    },
+    {
+        id:5,
+        name:"Пробный кейс",
+        price:12,
+        free:false,
+        min:1,
+        mid1:6,
+        mid2:13,
+        max:36
+    },
+    {
+        id:6,
+        name:"Медный кейс",
+        price:27,
+        free:false,
+        min:1,
+        mid1:14,
+        mid2:30,
+        max:81
+    },
+    {
+        id:7,
+        name:"Бронзовый кейс",
+        price:63,
+        free:false,
+        min:3,
+        mid1:32,
+        mid2:69,
+        max:189
+    },
+    {
+        id:8,
+        name:"Стартовый кейс",
+        price:145,
+        free:false,
+        min:7,
+        mid1:73,
+        mid2:160,
+        max:435
+    },
+    {
+        id:9,
+        name:"Уличный кейс",
+        price:340,
+        free:false,
+        min:17,
+        mid1:170,
+        mid2:374,
+        max:1020
+    },
+    {
+        id:10,
+        name:"Дворовый кейс",
+        price:790,
+        free:false,
+        min:40,
+        mid1:395,
+        mid2:869,
+        max:2370
+    },
+    {
+        id:11,
+        name:"Армейский кейс",
+        price:1850,
+        free:false,
+        min:93,
+        mid1:925,
+        mid2:2035,
+        max:5550
+    },
+    {
+        id:12,
+        name:"Штурмовой кейс",
+        price:4300,
+        free:false,
+        min:215,
+        mid1:2150,
+        mid2:4730,
+        max:12900
+    },
+    {
+        id:13,
+        name:"Секретный кейс",
+        price:9950,
+        free:false,
+        min:498,
+        mid1:4975,
+        mid2:10945,
+        max:29850
+    },
+    {
+        id:14,
+        name:"Элитный кейс",
+        price:23000,
+        free:false,
+        min:1150,
+        mid1:11500,
+        mid2:25300,
+        max:69000
+    },
+    {
+        id:15,
+        name:"Титановый кейс",
+        price:54000,
+        free:false,
+        min:2700,
+        mid1:27000,
+        mid2:59400,
+        max:162000
+    },
+    {
+        id:16,
+        name:"Платиновый кейс",
+        price:125000,
+        free:false,
+        min:6250,
+        mid1:62500,
+        mid2:137500,
+        max:375000
+    },
+    {
+        id:17,
+        name:"Алмазный кейс",
+        price:290000,
+        free:false,
+        min:14500,
+        mid1:145000,
+        mid2:319000,
+        max:870000
+    },
+    {
+        id:18,
+        name:"Королевский кейс",
+        price:680000,
+        free:false,
+        min:34000,
+        mid1:340000,
+        mid2:748000,
+        max:2040000
+    },
+    {
+        id:19,
+        name:"Императорский кейс",
+        price:1600000,
+        free:false,
+        min:80000,
+        mid1:800000,
+        mid2:1760000,
+        max:4800000
+    },
+    {
+        id:20,
+        name:"Драконий кейс",
+        price:3650000,
+        free:false,
+        min:182500,
+        mid1:1825000,
+        mid2:4015000,
+        max:10950000
+    },
+    {
+        id:21,
+        name:"Мифический кейс",
+        price:8550000,
+        free:false,
+        min:427500,
+        mid1:4275000,
+        mid2:9405000,
+        max:25650000
+    },
+    {
+        id:22,
+        name:"Легендарный кейс",
+        price:19850000,
+        free:false,
+        min:992500,
+        mid1:9925000,
+        mid2:21835000,
+        max:59550000
+    },
+    {
+        id:23,
+        name:"Божественный кейс",
+        price:46200000,
+        free:false,
+        min:2310000,
+        mid1:23100000,
+        mid2:50820000,
+        max:138600000
+    },
+    {
+        id:24,
+        name:"Космический кейс",
+        price:107500000,
+        free:false,
+        min:5375000,
+        mid1:53750000,
+        mid2:118250000,
+        max:295000000
+    },
+    {
+        id:25,
+        name:"Кейс Судьбы",
+        price:250000000,
+        free:false,
+        min:12500000,
+        mid1:125000000,
+        mid2:275000000,
+        max:295000000
+    }
+];
+
+let caseModalBusy = false;
+let currentCaseId = null;
+
+function rarityForPrice(price){
+
+    if(price < 150) return "Common";
+    if(price < 500) return "Uncommon";
+    if(price < 1200) return "Rare";
+    if(price < 2500) return "Epic";
+
+    return "Legendary";
+
+}
+
+function rollCaseTierRange(caseDef){
+
+    /*
+        Три уровня редкости для кейсов:
+        Обычный  — 70%
+        Редкий   — 25%
+        Легендарный (джекпот) — 5%
+    */
+
+    const roll =
+        Math.random() * 100;
+
+    if(roll < 70){
+
+        return [
+            caseDef.min,
+            caseDef.mid1
+        ];
+
+    }
+
+    if(roll < 95){
+
+        return [
+            caseDef.mid1,
+            caseDef.mid2
+        ];
+
+    }
+
+    return [
+        caseDef.mid2,
+        caseDef.max
+    ];
+
+}
+
+function rollCaseReward(caseDef){
+
+    const [rangeMin, rangeMax] =
+        rollCaseTierRange(caseDef);
+
+    const target =
+        Math.round(
+            rangeMin +
+            Math.random() *
+            (rangeMax - rangeMin)
+        );
+
+    const weapon =
+        weapons[
+            Math.floor(
+                Math.random() * weapons.length
+            )
+        ];
+
+    const style =
+        styles[
+            Math.floor(
+                Math.random() * styles.length
+            )
+        ];
+
+    const emoji =
+        emojis[
+            Math.floor(
+                Math.random() * emojis.length
+            )
+        ];
+
+    const item = {
+        id:nextCaseId++,
+        name:weapon + " | " + style,
+        price:target,
+        rarity:rarityForPrice(target),
+        emoji:emoji
+    };
+
+    skins.push(item);
+    game.customSkins.push(item);
+
+    return item;
+
+}
+
+function renderCases(){
+
+    const grid =
+        document.getElementById(
+            "casesGrid"
+        );
+
+    grid.innerHTML =
+        CASES.map(
+            c => {
+
+                const alreadyClaimed =
+                    c.free &&
+                    game.freeCasesClaimed.includes(
+                        c.id
+                    );
+
+                const cantAfford =
+                    !c.free &&
+                    game.balance < c.price;
+
+                const isDisabled =
+                    alreadyClaimed ||
+                    cantAfford;
+
+                return `
+                <div class="case-card${
+                    c.free
+                    ? " free-case"
+                    : ""
+                }">
+
+                    ${
+                        c.free
+                        ? '<div class="free-badge">БЕСПЛАТНО</div>'
+                        : ""
+                    }
+
+                    <div class="case-icon">
+                        <img
+                            src="${CASE_IMAGE}"
+                            class="case-icon-img"
+                            alt="Кейс"
+                        >
+                    </div>
+
+                    <div class="case-name">
+                        ${escapeHTML(c.name)}
+                    </div>
+
+                    <div class="case-odds">
+
+                        <div class="odd-row">
+                            <span>Обычный</span>
+                            <span>${formatGold(c.min)}–${formatGold(c.mid1)} G</span>
+                            <b>70%</b>
+                        </div>
+
+                        <div class="odd-row">
+                            <span>Редкий</span>
+                            <span>${formatGold(c.mid1)}–${formatGold(c.mid2)} G</span>
+                            <b>25%</b>
+                        </div>
+
+                        <div class="odd-row jackpot">
+                            <span>Джекпот</span>
+                            <span>${formatGold(c.mid2)}–${formatGold(c.max)} G</span>
+                            <b>5%</b>
+                        </div>
+
+                    </div>
+
+                    <div class="case-price">
+                        ${
+                            c.free
+                            ? "0 G"
+                            : formatGold(c.price) + " G"
+                        }
+                    </div>
+
+                    <button
+                        class="case-open-button"
+                        data-case="${c.id}"
+                        ${
+                            isDisabled
+                            ? "disabled"
+                            : ""
+                        }
+                    >
+                        ${
+                            alreadyClaimed
+                            ? "ПОЛУЧЕНО"
+                            : "ОТКРЫТЬ КЕЙС"
+                        }
+                    </button>
+
+                </div>
+            `;
+
+            }
+        ).join("");
+
+    grid
+        .querySelectorAll("[data-case]")
+        .forEach(btn => {
+
+            btn.addEventListener(
+                "click",
+                () => {
+
+                    startCaseOpen(
+                        Number(
+                            btn.dataset.case
+                        )
+                    );
+
+                }
+            );
+
+        });
+
+}
+
+function startCaseOpen(caseId){
+
+    if(caseModalBusy) return;
+
+    const caseDef =
+        CASES.find(
+            c => c.id === caseId
+        );
+
+    if(!caseDef) return;
+
+    if(caseDef.free){
+
+        if(
+            game.freeCasesClaimed.includes(
+                caseDef.id
+            )
+        ){
+
+            showToast(
+                "Этот бесплатный кейс уже получен",
+                "bad"
+            );
+
+            return;
+
+        }
+
+        game.freeCasesClaimed.push(
+            caseDef.id
+        );
+
+    }else{
+
+        if(game.balance < caseDef.price){
+
+            showToast(
+                "Недостаточно Gold",
+                "bad"
+            );
+
+            return;
+
+        }
+
+        game.balance -= caseDef.price;
+
+    }
+
+    const reward =
+        rollCaseReward(caseDef);
+
+    game.inventory.push(reward.id);
+
+    game.casesOpened =
+        (game.casesOpened || 0) + 1;
+
+    updateUI();
+    renderCases();
+
+    currentCaseId = caseId;
+
+    openCaseAnimation(
+        caseDef,
+        reward
+    );
+
+}
+
+function openCaseAnimation(caseDef, reward){
+
+    caseModalBusy = true;
+
+    document.getElementById(
+        "caseModalTitle"
+    ).textContent =
+        caseDef.name.toUpperCase();
+
+    document.getElementById(
+        "caseModalSubtitle"
+    ).textContent =
+        "Диапазон: " +
+        formatGold(caseDef.min) +
+        " – " +
+        formatGold(caseDef.max) +
+        " G";
+
+    const resultBox =
+        document.getElementById(
+            "caseResult"
+        );
+
+    resultBox.classList.remove("show");
+    resultBox.innerHTML = "";
+
+    document.getElementById(
+        "caseAgainButton"
+    ).style.display = "none";
+
+    const reel =
+        document.getElementById(
+            "caseReel"
+        );
+
+    reel.style.transition = "none";
+    reel.style.transform =
+        "translateX(0px)";
+
+    const decoyCount = 34;
+    const winIndex = 27;
+    const items = [];
+
+    for(let i = 0; i < decoyCount; i++){
+
+        if(i === winIndex){
+
+            items.push(reward);
+
+        }else{
+
+            const w =
+                weapons[
+                    Math.floor(
+                        Math.random() *
+                        weapons.length
+                    )
+                ];
+
+            const s =
+                styles[
+                    Math.floor(
+                        Math.random() *
+                        styles.length
+                    )
+                ];
+
+            const e =
+                emojis[
+                    Math.floor(
+                        Math.random() *
+                        emojis.length
+                    )
+                ];
+
+            const p =
+                Math.round(
+                    caseDef.min +
+                    Math.random() *
+                    (caseDef.max - caseDef.min)
+                );
+
+            items.push({
+                name:w + " | " + s,
+                price:p,
+                emoji:e
+            });
+
+        }
+
+    }
+
+    reel.innerHTML =
+        items.map(
+            (it, i) => `
+                <div class="case-reel-item${
+                    i === winIndex
+                    ? " win-item"
+                    : ""
+                }">
+
+                    <div class="r-emoji">
+                        ${it.emoji}
+                    </div>
+
+                    <div class="r-name">
+                        ${escapeHTML(it.name)}
+                    </div>
+
+                    <div class="r-price">
+                        ${formatGold(it.price)} G
+                    </div>
+
+                </div>
+            `
+        ).join("");
+
+    document.getElementById(
+        "caseModal"
+    ).classList.add("show");
+
+    requestAnimationFrame(() => {
+
+        requestAnimationFrame(() => {
+
+            const wrapWidth =
+                document.getElementById(
+                    "caseReelWrap"
+                ).clientWidth;
+
+            const itemPitch = 106;
+
+            const jitter =
+                Math.round(
+                    (Math.random() - 0.5) * 60
+                );
+
+            const targetOffset =
+                winIndex * itemPitch +
+                itemPitch / 2 -
+                wrapWidth / 2 +
+                jitter;
+
+            reel.style.transition =
+                "transform 4.4s cubic-bezier(.11,.7,.08,1)";
+
+            reel.style.transform =
+                "translateX(-" +
+                targetOffset +
+                "px)";
+
+        });
+
+    });
+
+    setTimeout(() => {
+
+        showCaseResult(reward);
+        caseModalBusy = false;
+
+    }, 4600);
+
+}
+
+function showCaseResult(reward){
+
+    const resultBox =
+        document.getElementById(
+            "caseResult"
+        );
+
+    resultBox.innerHTML = `
+        <div class="r-icon">
+            ${reward.emoji}
+        </div>
+
+        <div class="r-info">
+
+            <div class="r-title">
+                Вы получили
+            </div>
+
+            <div class="r-name">
+                ${escapeHTML(reward.name)}
+            </div>
+
+            <div class="r-price">
+                ${formatGold(reward.price)} G
+            </div>
+
+        </div>
+    `;
+
+    resultBox.classList.add("show");
+
+    document.getElementById(
+        "caseAgainButton"
+    ).style.display = "block";
+
+}
+
+function closeCaseModal(){
+
+    document.getElementById(
+        "caseModal"
+    ).classList.remove("show");
+
+}
+
+document
+    .getElementById("closeCaseModal")
+    .addEventListener(
+        "click",
+        closeCaseModal
+    );
+
+document
+    .getElementById("caseModal")
+    .addEventListener(
+        "click",
+        event => {
+
+            if(
+                event.target.id ===
+                "caseModal"
+            ){
+
+                closeCaseModal();
+
+            }
+
+        }
+    );
+
+document
+    .getElementById("caseAgainButton")
+    .addEventListener(
+        "click",
+        () => {
+
+            if(currentCaseId !== null){
+
+                startCaseOpen(currentCaseId);
+
+            }
+
+        }
+    );
+
+
+/* =====================================================
+   PROMO CODES
+===================================================== */
+
+const PROMO_CODES = {
+
+    "BULAT":{
+        reward:5000
+    },
+
+    "PODAROK":{
+        reward:5000
+    },
+
+    "SITE":{
+        reward:5000
+    },
+
+    "UPGRADE":{
+        reward:5000
+    }
+
+};
+
+function renderPromoUsedList(){
+
+    const list =
+        document.getElementById(
+            "promoUsedList"
+        );
+
+    if(
+        !game.usedPromoCodes ||
+        game.usedPromoCodes.length === 0
+    ){
+
+        list.textContent =
+            "Пока пусто";
+
+        return;
+
+    }
+
+    list.innerHTML =
+        game.usedPromoCodes
+            .map(
+                code => `
+                    <div class="promo-used-chip">
+                        ${escapeHTML(code)}
+                    </div>
+                `
+            )
+            .join("");
+
+}
+
+function renderPromo(){
+
+    document.getElementById(
+        "promoMessage"
+    ).textContent = "";
+
+    document.getElementById(
+        "promoMessage"
+    ).className =
+        "promo-message";
+
+    renderPromoUsedList();
+
+}
+
+function activatePromoCode(){
+
+    const input =
+        document.getElementById(
+            "promoInput"
+        );
+
+    const messageBox =
+        document.getElementById(
+            "promoMessage"
+        );
+
+    const raw =
+        input.value
+            .trim()
+            .toUpperCase();
+
+    if(!raw){
+
+        messageBox.textContent =
+            "Введи промокод";
+
+        messageBox.className =
+            "promo-message bad";
+
+        return;
+
+    }
+
+    if(
+        game.usedPromoCodes.includes(
+            raw
+        )
+    ){
+
+        messageBox.textContent =
+            "Этот промокод уже активирован";
+
+        messageBox.className =
+            "promo-message bad";
+
+        return;
+
+    }
+
+    const promo =
+        PROMO_CODES[raw];
+
+    if(!promo){
+
+        messageBox.textContent =
+            "Такого промокода не существует";
+
+        messageBox.className =
+            "promo-message bad";
+
+        return;
+
+    }
+
+    game.balance +=
+        promo.reward;
+
+    game.usedPromoCodes.push(
+        raw
+    );
+
+    updateUI();
+    renderPromoUsedList();
+
+    messageBox.textContent =
+        "Промокод активирован! +" +
+        formatGold(promo.reward) +
+        " G";
+
+    messageBox.className =
+        "promo-message good";
+
+    input.value = "";
+
+    showToast(
+        "+" +
+        formatGold(promo.reward) +
+        " G по промокоду",
+        "good"
+    );
+
+}
+
+document
+    .getElementById("promoSubmit")
+    .addEventListener(
+        "click",
+        activatePromoCode
+    );
+
+document
+    .getElementById("promoInput")
+    .addEventListener(
+        "keydown",
+        event => {
+
+            if(event.key === "Enter"){
+
+                activatePromoCode();
+
+            }
+
+        }
+    );
+
+
+/* =====================================================
+   DAILY BONUS
+===================================================== */
+
+const DAILY_COOLDOWN_MS =
+    24 * 60 * 60 * 1000;
+
+const DAILY_OUTCOMES = [
+    {
+        type:"none",
+        value:0,
+        label:"Ничего",
+        chance:40,
+        emoji:"💨"
+    },
+    {
+        type:"skin",
+        value:1000,
+        label:"1 000 G",
+        chance:35,
+        emoji:"🥉"
+    },
+    {
+        type:"skin",
+        value:5000,
+        label:"5 000 G",
+        chance:20,
+        emoji:"🥈"
+    },
+    {
+        type:"skin",
+        value:10000,
+        label:"10 000 G",
+        chance:5,
+        emoji:"🥇"
+    }
+];
+
+let dailyBusy = false;
+let dailyTickInterval = null;
+
+function rollDailyOutcome(){
+
+    const roll =
+        Math.random() * 100;
+
+    let cumulative = 0;
+
+    for(
+        const outcome of DAILY_OUTCOMES
+    ){
+
+        cumulative +=
+            outcome.chance;
+
+        if(roll < cumulative){
+
+            return outcome;
+
+        }
+
+    }
+
+    return DAILY_OUTCOMES[0];
+
+}
+
+function getDailyRemaining(){
+
+    if(!game.lastDailyClaim)
+        return 0;
+
+    const elapsed =
+        Date.now() -
+        game.lastDailyClaim;
+
+    return Math.max(
+        0,
+        DAILY_COOLDOWN_MS - elapsed
+    );
+
+}
+
+function formatDuration(ms){
+
+    const totalSeconds =
+        Math.ceil(ms / 1000);
+
+    const h =
+        Math.floor(
+            totalSeconds / 3600
+        );
+
+    const m =
+        Math.floor(
+            (totalSeconds % 3600) / 60
+        );
+
+    const s =
+        totalSeconds % 60;
+
+    const pad =
+        n =>
+            String(n).padStart(2,"0");
+
+    return pad(h) + ":" +
+        pad(m) + ":" +
+        pad(s);
+
+}
+
+function updateDailyTimerDisplay(){
+
+    const remaining =
+        getDailyRemaining();
+
+    const timerEl =
+        document.getElementById(
+            "dailyTimer"
+        );
+
+    const btn =
+        document.getElementById(
+            "dailyClaimButton"
+        );
+
+    if(!timerEl || !btn)
+        return;
+
+    if(remaining <= 0){
+
+        timerEl.textContent =
+            "Бонус доступен прямо сейчас!";
+
+        timerEl.classList.add(
+            "ready"
+        );
+
+        btn.disabled =
+            dailyBusy;
+
+    }else{
+
+        timerEl.textContent =
+            "Следующий бонус через " +
+            formatDuration(remaining);
+
+        timerEl.classList.remove(
+            "ready"
+        );
+
+        btn.disabled = true;
+
+    }
+
+}
+
+function renderDaily(){
+
+    updateDailyTimerDisplay();
+
+    if(dailyTickInterval){
+
+        clearInterval(
+            dailyTickInterval
+        );
+
+    }
+
+    dailyTickInterval =
+        setInterval(
+            updateDailyTimerDisplay,
+            1000
+        );
+
+}
+
+function claimDailyBonus(){
+
+    if(dailyBusy) return;
+
+    if(getDailyRemaining() > 0)
+        return;
+
+    dailyBusy = true;
+
+    game.lastDailyClaim =
+        Date.now();
+
+    const outcome =
+        rollDailyOutcome();
+
+    let reward = null;
+
+    if(outcome.type === "skin"){
+
+        const weapon =
+            weapons[
+                Math.floor(
+                    Math.random() *
+                    weapons.length
+                )
+            ];
+
+        const style =
+            styles[
+                Math.floor(
+                    Math.random() *
+                    styles.length
+                )
+            ];
+
+        reward = {
+            id:nextCaseId++,
+            name:weapon + " | " + style,
+            price:outcome.value,
+            rarity:rarityForPrice(
+                outcome.value
+            ),
+            emoji:outcome.emoji
+        };
+
+        skins.push(reward);
+        game.customSkins.push(reward);
+        game.inventory.push(reward.id);
+
+    }
+
+    updateUI();
+    updateDailyTimerDisplay();
+
+    openDailyAnimation(
+        outcome,
+        reward
+    );
+
+}
+
+function openDailyAnimation(outcome, reward){
+
+    const resultBox =
+        document.getElementById(
+            "dailyResult"
+        );
+
+    resultBox.classList.remove(
+        "show"
+    );
+
+    resultBox.innerHTML = "";
+
+    const reel =
+        document.getElementById(
+            "dailyReel"
+        );
+
+    reel.style.transition = "none";
+    reel.style.transform =
+        "translateX(0px)";
+
+    const decoyCount = 34;
+    const winIndex = 27;
+    const items = [];
+
+    const winItem =
+        outcome.type === "skin"
+        ? {
+            name:reward.name,
+            price:reward.price,
+            emoji:reward.emoji
+        }
+        : {
+            name:"Ничего",
+            price:0,
+            emoji:"💨"
+        };
+
+    for(let i = 0; i < decoyCount; i++){
+
+        if(i === winIndex){
+
+            items.push(winItem);
+
+        }else{
+
+            const decoyOutcome =
+                DAILY_OUTCOMES[
+                    Math.floor(
+                        Math.random() *
+                        DAILY_OUTCOMES.length
+                    )
+                ];
+
+            items.push({
+                name:
+                    decoyOutcome.type === "none"
+                    ? "Ничего"
+                    : "Приз",
+                price:decoyOutcome.value,
+                emoji:decoyOutcome.emoji
+            });
+
+        }
+
+    }
+
+    reel.innerHTML =
+        items.map(
+            (it, i) => `
+                <div class="case-reel-item${
+                    i === winIndex
+                    ? " win-item"
+                    : ""
+                }">
+
+                    <div class="r-emoji">
+                        ${it.emoji}
+                    </div>
+
+                    <div class="r-name">
+                        ${escapeHTML(it.name)}
+                    </div>
+
+                    <div class="r-price">
+                        ${
+                            it.price > 0
+                            ? formatGold(it.price) + " G"
+                            : "—"
+                        }
+                    </div>
+
+                </div>
+            `
+        ).join("");
+
+    requestAnimationFrame(() => {
+
+        requestAnimationFrame(() => {
+
+            const wrapWidth =
+                document.getElementById(
+                    "dailyReelWrap"
+                ).clientWidth;
+
+            const itemPitch = 106;
+
+            const jitter =
+                Math.round(
+                    (Math.random() - 0.5) * 60
+                );
+
+            const targetOffset =
+                winIndex * itemPitch +
+                itemPitch / 2 -
+                wrapWidth / 2 +
+                jitter;
+
+            reel.style.transition =
+                "transform 4.4s cubic-bezier(.11,.7,.08,1)";
+
+            reel.style.transform =
+                "translateX(-" +
+                targetOffset +
+                "px)";
+
+        });
+
+    });
+
+    setTimeout(() => {
+
+        showDailyResult(
+            outcome,
+            reward
+        );
+
+        dailyBusy = false;
+
+        updateDailyTimerDisplay();
+
+    }, 4600);
+
+}
+
+function showDailyResult(outcome, reward){
+
+    const resultBox =
+        document.getElementById(
+            "dailyResult"
+        );
+
+    if(outcome.type === "skin"){
+
+        resultBox.innerHTML = `
+            <div class="r-icon">
+                ${reward.emoji}
+            </div>
+
+            <div class="r-info">
+
+                <div class="r-title">
+                    Вы получили
+                </div>
+
+                <div class="r-name">
+                    ${escapeHTML(reward.name)}
+                </div>
+
+                <div class="r-price">
+                    ${formatGold(reward.price)} G
+                </div>
+
+            </div>
+        `;
+
+        showToast(
+            "🎁 Бонус: " +
+            reward.name +
+            " (" +
+            formatGold(reward.price) +
+            " G)",
+            "good"
+        );
+
+    }else{
+
+        resultBox.innerHTML = `
+            <div class="r-icon">
+                💨
+            </div>
+
+            <div class="r-info">
+
+                <div class="r-title">
+                    Результат
+                </div>
+
+                <div class="r-name">
+                    Сегодня не повезло
+                </div>
+
+                <div class="r-price">
+                    Попробуй завтра
+                </div>
+
+            </div>
+        `;
+
+        showToast(
+            "Бонус: ничего не выпало",
+            "bad"
+        );
+
+    }
+
+    resultBox.classList.add(
+        "show"
+    );
+
+}
+
+document
+    .getElementById("dailyClaimButton")
+    .addEventListener(
+        "click",
+        claimDailyBonus
+    );
+
+
+/* =====================================================
+   INITIALIZATION
+===================================================== */
+
+generateSkins();
+
+loadGame();
+
+updateUI();
+
+drawWheel(
+    chance
+);
+
+updateTargetFromSettings();
+
+renderShop();
+
+renderInventory();
+
+renderCases();
+
+renderPromo();
+
+renderDaily();
+
+</script>
+
+</body>
+</html>
