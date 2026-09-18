@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zeno Vpn</title>
+<style>
+  :root {
+    --bg: #0f1a2b;
+    --panel: #172640;
+    --text: #eef3fb;
+    --muted: #8fa3c2;
+    --accent: #3ea6ff;
+    --error: #ff6b6b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 16px;
+  }
+  h1 {
+    margin: 48px 0 40px;
+    font-size: clamp(2.2rem, 8vw, 3.5rem);
+    letter-spacing: 0.02em;
+  }
+  .card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--panel);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+  }
+  button {
+    width: 100%;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #06121f;
+    background: var(--accent);
+    border: 0;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  button:focus-visible, input:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+  input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 12px;
+    font-size: 1rem;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid #2c4166;
+    border-radius: 10px;
+  }
+  #error { color: var(--error); min-height: 1.4em; margin: 10px 0 0; }
+  #link {
+    display: block;
+    margin-top: 16px;
+    color: var(--accent);
+    word-break: break-all;
+  }
+  .hidden { display: none; }
+  p { color: var(--muted); margin: 0 0 12px; }
+</style>
+</head>
+<body>
+
+<h1>Zeno Vpn</h1>
+
+<div class="card">
+  <!-- Шаг 1: кнопка -->
+  <div id="step1">
+    <button id="getBtn">Получить подписку</button>
+  </div>
+
+  <!-- Шаг 2: пароль -->
+  <div id="step2" class="hidden">
+    <p>Введите пароль</p>
+    <input id="pass" type="password" placeholder="Пароль" autocomplete="off">
+    <button id="checkBtn">Подтвердить</button>
+    <div id="error"></div>
+  </div>
+
+  <!-- Шаг 3: ссылка -->
+  <div id="step3" class="hidden">
+    <p>Ваша ссылка на подписку:</p>
+    <a id="link" href="https://raw.githubusercontent.com/bskertt-cmd/Happ-Keys-i/refs/heads/main/kymayser.txt" target="_blank" rel="noopener">
+      https://raw.githubusercontent.com/bskertt-cmd/Happ-Keys-i/refs/heads/main/kymayser.txt
+    </a>
+  </div>
+</div>
+
+<script>
+  const PASSWORD = "DILBAR";
+  const $ = id => document.getElementById(id);
+
+  $("getBtn").onclick = () => {
+    $("step1").classList.add("hidden");
+    $("step2").classList.remove("hidden");
+    $("pass").focus();
+  };
+
+  function check() {
+    if ($("pass").value.trim().toUpperCase() === PASSWORD) {
+      $("step2").classList.add("hidden");
+      $("step3").classList.remove("hidden");
+    } else {
+      $("error").textContent = "Неверный пароль";
+    }
+  }
+
+  $("checkBtn").onclick = check;
+  $("pass").addEventListener("keydown", e => { if (e.key === "Enter") check(); });
+</script>
+
+</body>
+</html>
